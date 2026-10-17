@@ -271,6 +271,40 @@ write("schedule_items.json", scheduleItems);
 write("locations.json", locations);
 write("team_schedule.json", teamSchedule);
 
+// ------------------------------------------------------- Elogios e pins (M4)
+export const praiseWindows = [
+  { id: id("90000000", 1), name: "Sexta à noite", is_open: false, opened_at: new Date(at(FRI, "21:00")).toISOString(), closed_at: new Date(at(FRI, "23:00")).toISOString(), opened_by: qgAdminId, is_mock: true },
+  { id: id("90000000", 2), name: "Sábado", is_open: true, opened_at: new Date(at(SAT, "09:00")).toISOString(), closed_at: null, opened_by: qgAdminId, is_mock: true },
+];
+const TRAITS = ["feliz", "facilitador", "por_inteiro"];
+let prSeq = 0;
+function seedPraises(windowIdx: number, count: number, seed: number) {
+  const seen = new Set<string>();
+  const out = [];
+  for (let k = 0; out.length < count && k < count * 10; k++) {
+    const s = volunteers[Math.floor(rand(seed + k * 3) * volunteers.length)];
+    // Alguns voluntários recebem mais, para o ranking ter destaque.
+    const r = volunteers[Math.floor(Math.pow(rand(seed + k * 7), 2) * volunteers.length)];
+    const trait = TRAITS[Math.floor(rand(seed + k * 11) * 3)];
+    const key = `${s.id}|${r.id}|${trait}`;
+    if (s.id === r.id || seen.has(key)) continue;
+    seen.add(key);
+    out.push({ id: id("91000000", ++prSeq), window_id: praiseWindows[windowIdx].id, sender_id: s.id, receiver_id: r.id, trait, is_mock: true });
+  }
+  return out;
+}
+export const praises = [...seedPraises(0, 120, 500), ...seedPraises(1, 45, 900)];
+
+export const pinAwards = [
+  { id: id("92000000", 1), volunteer_id: volunteers[0].id, trait: "feliz", awarded_by: qgAdminId, awarded_at: new Date(at(FRI, "23:10")).toISOString(), delivered_at: new Date(at(SAT, "08:30")).toISOString(), is_mock: true },
+  { id: id("92000000", 2), volunteer_id: volunteers[1].id, trait: "facilitador", awarded_by: qgAdminId, awarded_at: new Date(at(FRI, "23:12")).toISOString(), delivered_at: null, is_mock: true },
+  { id: id("92000000", 3), volunteer_id: volunteers[2].id, trait: "por_inteiro", awarded_by: qgAdminId, awarded_at: new Date(at(FRI, "23:15")).toISOString(), delivered_at: null, is_mock: true },
+];
+
+write("praise_windows.json", praiseWindows);
+write("praises.json", praises);
+write("pin_awards.json", pinAwards);
+
 write("event_days.json", eventDays);
 write("meals.json", meals);
 write("team_meal_windows.json", teamMealWindows);

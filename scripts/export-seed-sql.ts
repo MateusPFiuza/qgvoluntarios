@@ -81,11 +81,14 @@ function main() {
     const file = path.resolve(__dirname, `../supabase/seed/demo/${table}.json`);
     if (!existsSync(file)) continue;
     const rows = JSON.parse(readFileSync(file, "utf8")) as Record<string, unknown>[];
+    // A semente traz elogios em janela já fechada; o gatilho de janela aberta é suspenso só aqui.
+    if (table === "praises") lines.push("alter table praises disable trigger trg_praises_open_window;");
     for (const row of rows) {
       const cols = Object.keys(row);
       const vals = cols.map((c) => sqlValue(row[c]));
       lines.push(`insert into ${table} (${cols.join(", ")}) values (${vals.join(", ")}) on conflict (${conflict}) do nothing;`);
     }
+    if (table === "praises") lines.push("alter table praises enable trigger trg_praises_open_window;");
     lines.push("");
   }
 

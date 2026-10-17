@@ -1,0 +1,29 @@
+[
+  {
+    "id": "92000000-0000-4000-8000-000000000001",
+    "volunteer_id": "499355c2-e0c9-4d3c-9e61-aea586af8dbb",
+    "trait": "feliz",
+    "awarded_by": "357d31b6-4ca0-45d6-bbc9-77d8c2f4379c",
+    "awarded_at": "2026-12-12T02:10:00.000Z",
+    "delivered_at": "2026-12-12T11:30:00.000Z",
+    "is_mock": true
+  },
+  {
+    "id": "92000000-0000-4000-8000-000000000002",
+    "volunteer_id": "611de72d-2eb7-4602-af75-f41e2c4800c4",
+    "trait": "facilitador",
+    "awarded_by": "357d31b6-4ca0-45d6-bbc9-77d8c2f4379c",
+    "awarded_at": "2026-12-12T02:12:00.000Z",
+    "delivered_at": null,
+    "is_mock": true
+  },
+  {
+    "id": "92000000-0000-4000-8000-000000000003",
+    "volunteer_id": "48472e35-43bd-4ff4-8387-52aab3848226",
+    "trait": "por_inteiro",
+    "awarded_by": "357d31b6-4ca0-45d6-bbc9-77d8c2f4379c",
+    "awarded_at": "2026-12-12T02:15:00.000Z",
+    "delivered_at": null,
+    "is_mock": true
+  }
+]
