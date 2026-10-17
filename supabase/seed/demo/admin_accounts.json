@@ -10,5 +10,12 @@
     "password_hash": "$argon2id$v=19$m=19456,t=3,p=1$PQM4KsXhYHxEWpOgf/IHXQ$ST2lhIlBXa8rKS7lT820tn/qCUWlVwqy5mHzduFSFiA",
     "can_manage_radios": false,
     "locked_until": null
+  },
+  {
+    "volunteer_id": "cee55dd6-bca9-47de-9715-2cddcb576a65",
+    "password_hash": "$argon2id$v=19$m=19456,t=3,p=1$kbzwGGgW4XOF84gNG36cFQ$jpu31Pdx8YofxIeMRmNKp2SZFW9McFU2hV66cMR8sYc",
+    "can_manage_radios": true,
+    "role": "radios",
+    "locked_until": null
   }
 ]

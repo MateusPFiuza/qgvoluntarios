@@ -1,0 +1,142 @@
+[
+  {
+    "id": "40000000-0000-4000-8000-000000000001",
+    "number": 1,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000002",
+    "number": 2,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000003",
+    "number": 3,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000004",
+    "number": 4,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000005",
+    "number": 5,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000006",
+    "number": 6,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000007",
+    "number": 7,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000008",
+    "number": 8,
+    "status": "defeito",
+    "notes": "Antena quebrada (exemplo)",
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000009",
+    "number": 9,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000010",
+    "number": 10,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000011",
+    "number": 11,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000012",
+    "number": 12,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000013",
+    "number": 13,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000014",
+    "number": 14,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000015",
+    "number": 15,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000016",
+    "number": 16,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000017",
+    "number": 17,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000018",
+    "number": 18,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000019",
+    "number": 19,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  },
+  {
+    "id": "40000000-0000-4000-8000-000000000020",
+    "number": 20,
+    "status": "ok",
+    "notes": null,
+    "is_mock": true
+  }
+]

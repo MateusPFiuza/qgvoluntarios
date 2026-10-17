@@ -11,6 +11,7 @@ import path from "node:path";
 import teams from "../supabase/seed/demo/teams.json";
 import volunteers from "../supabase/seed/demo/volunteers.json";
 import adminAccounts from "../supabase/seed/demo/admin_accounts.json";
+import { hashPassword } from "../lib/rules/credential";
 
 const outDir = path.resolve(__dirname, "../supabase/seed/demo");
 const write = (name: string, data: unknown) => writeFileSync(path.join(outDir, name), JSON.stringify(data, null, 2) + "\n");
@@ -98,9 +99,64 @@ export const mealCheckins = [
   ...seedCheckins(2, 0.35, "12:06", "12:38", SAT),
 ];
 
+// ---------------------------------------------------------------- Rádios (M2)
+export const radios = Array.from({ length: 20 }, (_, i) => ({
+  id: id("40000000", i + 1),
+  number: i + 1,
+  status: i + 1 === 8 ? "defeito" : "ok",
+  notes: i + 1 === 8 ? "Antena quebrada (exemplo)" : null,
+  is_mock: true,
+}));
+
+let coSeq = 0;
+const co = (radioNo: number, volIdx: number, outAt: string, ret?: { at: string; battery: string; condition: string }) => ({
+  id: id("50000000", ++coSeq),
+  radio_id: radios[radioNo - 1].id,
+  volunteer_id: volunteers[volIdx].id,
+  checked_out_at: new Date(outAt).toISOString(),
+  checked_out_by: qgAdminId,
+  signature_path: null,
+  returned_at: ret ? new Date(ret.at).toISOString() : null,
+  returned_by: ret ? qgAdminId : null,
+  returned_by_volunteer_id: ret ? volunteers[volIdx].id : null,
+  battery_state: ret ? ret.battery : null,
+  condition: ret ? ret.condition : null,
+  is_mock: true,
+});
+
+export const radioCheckouts = [
+  // Sexta: devolvidos ao fim do dia, um parcialmente carregado, um com defeito.
+  co(7, 3, at(FRI, "16:30"), { at: at(FRI, "22:40"), battery: "parcial", condition: "ok" }),
+  co(10, 4, at(FRI, "16:35"), { at: at(FRI, "22:45"), battery: "carregado", condition: "ok" }),
+  co(8, 5, at(FRI, "16:40"), { at: at(FRI, "22:50"), battery: "descarregado", condition: "defeito" }),
+  // Sexta: não devolvido.
+  co(9, 6, at(FRI, "16:45")),
+  // Sábado: retirados de manhã.
+  ...[1, 2, 3, 4, 5, 6].map((n, i) => co(n, 9 + i * 3, at(SAT, `07:${String(40 + i * 3).padStart(2, "0")}`))),
+];
+
+write("radios.json", radios);
+write("radio_checkouts.json", radioCheckouts);
+
 write("event_days.json", eventDays);
 write("meals.json", meals);
 write("team_meal_windows.json", teamMealWindows);
 write("meal_checkins.json", mealCheckins);
+
+async function ensureRadioManager() {
+  const accounts = adminAccounts as { volunteer_id: string; role?: string }[];
+  if (accounts.some((a) => a.role === "radios")) return;
+  const diego = volunteers.find((v) => v.full_name === "Diego Lima")!;
+  accounts.push({
+    volunteer_id: diego.id,
+    password_hash: await hashPassword("radios2026"),
+    can_manage_radios: true,
+    role: "radios",
+    locked_until: null,
+  } as never);
+  write("admin_accounts.json", accounts);
+}
+
+ensureRadioManager().then(() => console.log("Gestor de rádios: Diego Lima (senha radios2026)"));
 
 console.log(`Refeições: ${meals.length}, janelas: ${teamMealWindows.length}, check-ins: ${mealCheckins.length}`);
