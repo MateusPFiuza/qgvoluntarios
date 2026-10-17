@@ -34,6 +34,7 @@ export default async function HomePage() {
         <PainelLink href="#" label="Refeições" disponivel={false} />
         <PainelLink href="#" label="Mapa" disponivel={false} />
         <PainelLink href="#" label="Elogios" disponivel={false} />
+        <Link href="/minha-identificacao" className="painel tap-target col-span-2 flex items-center justify-center p-4 font-mono text-sm uppercase tracking-wide text-nave-gold">Minha identificação (QR)</Link>
       </nav>
 
       {adminAccount && (

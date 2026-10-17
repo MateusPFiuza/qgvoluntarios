@@ -139,3 +139,5 @@ export async function setVolunteerLock(volunteerId: string, until: Date | null):
   const v = getDemoStore().volunteers.find((x) => x.id === volunteerId);
   if (v) v.login_locked_until = until?.toISOString() ?? null;
 }
+
+export * from "./repo-meals";

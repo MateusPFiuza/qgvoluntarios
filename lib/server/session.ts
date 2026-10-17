@@ -22,6 +22,7 @@ export type AdminSessionPayload = {
   sub: string; // volunteer id (ADM é sempre também voluntário)
   name: string;
   canManageRadios: boolean;
+  role: "adm" | "radios";
 };
 
 // --- Sessão do voluntário (cookie httpOnly, 3 dias com renovação) -------
@@ -90,6 +91,7 @@ export async function getAdminSession(): Promise<AdminSessionPayload | null> {
       sub: String(payload.sub),
       name: String(payload.name),
       canManageRadios: Boolean(payload.canManageRadios),
+      role: payload.role === "radios" ? "radios" : "adm",
     };
   } catch {
     return null;
@@ -98,4 +100,9 @@ export async function getAdminSession(): Promise<AdminSessionPayload | null> {
 
 export function clearAdminSession() {
   cookies().delete(ADMIN_COOKIE);
+}
+
+/** Renova a sessão de ADM a cada uso: expira só após 30 min sem uso. */
+export async function touchAdminSession(payload: AdminSessionPayload) {
+  await createAdminSession(payload);
 }

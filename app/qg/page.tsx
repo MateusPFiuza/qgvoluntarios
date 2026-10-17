@@ -1,36 +1,46 @@
-import { redirect } from "next/navigation";
-import { getAdminSession } from "@/lib/server/session";
+import Link from "next/link";
+import { config } from "@/lib/config";
+import { requireAdminPage } from "@/lib/server/guard";
 import { LogoutButton } from "@/components/LogoutButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function QgPage() {
-  const adminSession = await getAdminSession();
-  if (!adminSession) redirect("/qg/entrar");
+  const admin = await requireAdminPage("radios");
+  const isAdm = admin.role === "adm";
+
+  const items = [
+    isAdm && config.mealsEnabled() && { href: "/qg/refeicoes", label: "Check-in de refeição", hint: "Ler QR ou buscar nome" },
+    isAdm && config.mealsEnabled() && { href: "/qg/refeicoes/painel", label: "Painel de refeições", hint: "Consumidas, restantes, quem falta" },
+  ].filter(Boolean) as { href: string; label: string; hint: string }[];
 
   return (
-    <div className="flex min-h-screen flex-col gap-6 px-4 py-8">
+    <div className="flex min-h-screen flex-col gap-4 px-4 py-6">
       <header className="flex items-center justify-between">
-        <h1 className="font-display text-lg uppercase tracking-wide text-nave-orange fx-glow-text">
-          Área do QG
-        </h1>
-        <LogoutButton />
+        <h1 className="font-display text-lg uppercase tracking-wide text-nave-orange fx-glow-text">Área do QG</h1>
+        <div className="flex gap-2">
+          <Link href="/" className="tap-target flex items-center rounded border border-nave-gold-dim px-3 font-mono text-xs uppercase text-nave-text-secondary">
+            App
+          </Link>
+          <LogoutButton />
+        </div>
       </header>
 
-      <div className="painel p-5">
-        <p className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">ADM conectado</p>
-        <p className="mt-1 text-xl text-nave-text">{adminSession.name}</p>
-        {adminSession.canManageRadios && (
-          <p className="mt-1 text-sm text-nave-gold">Pode gerenciar rádios</p>
-        )}
+      <div className="painel p-4">
+        <p className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
+          {isAdm ? "ADM conectado" : "Gestor de rádios conectado"} · sessão expira em {config.adminIdleMinutes} min sem uso
+        </p>
+        <p className="mt-1 text-xl text-nave-text">{admin.name}</p>
       </div>
 
-      <div className="painel p-5 text-sm text-nave-text-secondary">
-        <p className="mb-2 font-semibold text-nave-gold">Em construção (M1+)</p>
-        <p>
-          Check-in de refeições, gestão de rádios, janelas de elogios e os
-          painéis de mapa/cronograma chegam nos próximos marcos. Este M0
-          entrega apenas a estrutura de login e o design system.
-        </p>
-      </div>
+      <nav className="flex flex-col gap-2">
+        {items.map((i) => (
+          <Link key={i.href} href={i.href} className="painel tap-target flex flex-col px-4 py-3 hover:border-nave-gold">
+            <span className="text-base text-nave-text">{i.label}</span>
+            <span className="text-sm text-nave-text-secondary">{i.hint}</span>
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

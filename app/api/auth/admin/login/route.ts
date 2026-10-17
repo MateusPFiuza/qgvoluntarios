@@ -50,7 +50,8 @@ export async function POST(request: Request) {
   await createAdminSession({
     sub: session.sub,
     name: session.name,
-    canManageRadios: account.can_manage_radios,
+    canManageRadios: account.can_manage_radios || account.role === "radios",
+    role: account.role === "radios" ? "radios" : "adm",
   });
 
   return NextResponse.json({ ok: true });

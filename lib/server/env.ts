@@ -35,3 +35,7 @@ export function getPersonalDataEncryptionKey(): string {
     "dev-insecure-32-bytes-key-aaaaaa!!"
   );
 }
+
+export function getQrSecret(): string {
+  return process.env.QR_SECRET ?? "dev-insecure-qr-secret-troque-em-produção";
+}

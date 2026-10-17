@@ -1,6 +1,11 @@
 import teamsSeed from "@/supabase/seed/demo/teams.json";
 import volunteersSeed from "@/supabase/seed/demo/volunteers.json";
 import adminAccountsSeed from "@/supabase/seed/demo/admin_accounts.json";
+import volunteersPrivateSeed from "@/supabase/seed/demo/volunteers_private.json";
+import eventDaysSeed from "@/supabase/seed/demo/event_days.json";
+import mealsSeed from "@/supabase/seed/demo/meals.json";
+import teamMealWindowsSeed from "@/supabase/seed/demo/team_meal_windows.json";
+import mealCheckinsSeed from "@/supabase/seed/demo/meal_checkins.json";
 
 /**
  * Armazenamento em memória usado quando o Supabase real não está
@@ -41,6 +46,7 @@ export type AdminAccount = {
   volunteer_id: string;
   password_hash: string;
   can_manage_radios: boolean;
+  role?: "adm" | "radios";
   locked_until: string | null;
 };
 
@@ -53,27 +59,77 @@ export type LoginAttemptRow = {
   created_at: string;
 };
 
+export type VolunteerPrivate = { volunteer_id: string; cpf_enc: string; rg_enc: string | null };
+
+export type EventDay = { id: string; date: string; label: string };
+
+export type Meal = {
+  id: string;
+  day_id: string;
+  kind: string;
+  label: string;
+  starts_at: string;
+  ends_at: string;
+  menu_text: string | null;
+  total_prepared: number;
+  is_mock: boolean;
+};
+
+export type TeamMealWindow = { team_id: string; meal_id: string; starts_at: string; ends_at: string; is_mock: boolean };
+
+export type MealCheckin = {
+  id: string;
+  volunteer_id: string;
+  meal_id: string;
+  method: "qr" | "search";
+  checked_by: string | null;
+  created_at: string;
+  is_mock?: boolean;
+};
+
+export type AuditRow = {
+  id: string;
+  actor_id: string | null;
+  action: string;
+  entity: string;
+  entity_id: string | null;
+  details: Record<string, unknown>;
+  created_at: string;
+};
+
 type StoreShape = {
   teams: Team[];
   volunteers: Volunteer[];
+  volunteersPrivate: VolunteerPrivate[];
   adminAccounts: AdminAccount[];
   loginAttempts: LoginAttemptRow[];
+  eventDays: EventDay[];
+  meals: Meal[];
+  teamMealWindows: TeamMealWindow[];
+  mealCheckins: MealCheckin[];
+  auditLog: AuditRow[];
 };
 
-const globalForDemoStore = globalThis as unknown as { __qg26DemoStore?: StoreShape };
+const globalForDemoStore = globalThis as unknown as { __qg26DemoStoreV2?: StoreShape };
 
 function initStore(): StoreShape {
   return {
     teams: structuredClone(teamsSeed) as Team[],
     volunteers: structuredClone(volunteersSeed) as Volunteer[],
+    volunteersPrivate: structuredClone(volunteersPrivateSeed) as VolunteerPrivate[],
     adminAccounts: structuredClone(adminAccountsSeed) as AdminAccount[],
     loginAttempts: [],
+    eventDays: structuredClone(eventDaysSeed) as EventDay[],
+    meals: structuredClone(mealsSeed) as Meal[],
+    teamMealWindows: structuredClone(teamMealWindowsSeed) as TeamMealWindow[],
+    mealCheckins: structuredClone(mealCheckinsSeed) as MealCheckin[],
+    auditLog: [],
   };
 }
 
 export function getDemoStore(): StoreShape {
-  if (!globalForDemoStore.__qg26DemoStore) {
-    globalForDemoStore.__qg26DemoStore = initStore();
+  if (!globalForDemoStore.__qg26DemoStoreV2) {
+    globalForDemoStore.__qg26DemoStoreV2 = initStore();
   }
-  return globalForDemoStore.__qg26DemoStore;
+  return globalForDemoStore.__qg26DemoStoreV2;
 }

@@ -117,3 +117,44 @@ isso deve ser substituído antes de qualquer deploy real.
 
 **Ponto único de configuração:** variáveis de ambiente na hospedagem
 (Vercel) — nunca no repositório.
+
+## 11. Relógio simulado por cookie (M1, seção 11)
+
+O "agora" do app vem de `lib/server/clock.ts`. Na demonstração, o padrão é
+sábado 12h40 (`config.demoDefaultNow` em `lib/config.ts`) para as telas
+terem movimento, e qualquer pessoa pode trocar. Em produção o cookie de
+relógio simulado só é aceito com sessão de ADM ativa e afeta só a tela
+desse ADM, nunca a dos voluntários. Mais seguro do que um valor global em
+`app_settings`, que mudaria a tela de todo mundo.
+
+O QR pessoal sempre usa o relógio real, senão a validação falharia.
+
+## 12. Módulo de refeições desligável (PENDENTE de aprovação, seção 10)
+
+`FEATURE_MEALS=false` esconde o check-in e o painel e faz as rotas
+responderem 404. Ponto único: `lib/config.ts`.
+
+## 13. Corrida no check-in
+
+A restrição `unique (volunteer_id, meal_id)` em `meal_checkins` decide.
+No modo em memória, a verificação e a inserção acontecem sem `await` entre
+elas, o que é atômico dentro do processo. O segundo ADM recebe "JÁ
+CONSUMIU" (ou "JÁ REGISTRADO AGORA" quando perdeu a corrida na inserção).
+
+## 14. Proteção contra CSRF nas rotas de API
+
+`lib/server/guard.ts`: toda rota que altera dados exige corpo JSON e,
+quando há cabeçalho `Origin`, que seja do mesmo host. Somado ao cookie
+`sameSite=lax`, um formulário de outro site não consegue disparar ações.
+
+## 15. Sessão de ADM renovada a cada uso
+
+Cada chamada de API do QG reemite o cookie de 30 min, cumprindo "30
+minutos sem uso". Visitar páginas sem chamar API não renova (limitação do
+Next.js: componentes de servidor não podem gravar cookie).
+
+## 16. Gestor de rádios como perfil da Área do QG (SUPOSIÇÃO, seção 4)
+
+`admin_accounts.role` é `adm` ou `radios`. O gestor de rádios passa pela
+mesma segunda barreira de senha (ele vê CPF/RG mascarados e assinaturas),
+mas só enxerga o módulo de rádios. ADMs também operam rádios.

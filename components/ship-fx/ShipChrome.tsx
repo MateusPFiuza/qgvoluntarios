@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Starfield } from "./Starfield";
 import { useSimpleMode } from "./SimpleModeProvider";
 
@@ -9,8 +10,13 @@ import { useSimpleMode } from "./SimpleModeProvider";
  * campo de estrelas. Some automaticamente em Modo Simples e em
  * prefers-reduced-motion (critério de aceite #2 da seção 14).
  */
+const OPERATIONAL_PREFIXES = ["/qg/refeicoes", "/qg/radios"];
+
 export function ShipChrome() {
   const { simpleMode } = useSimpleMode();
+  const pathname = usePathname();
+  // Telas operacionais (check-in e rádios): efeitos desligados por padrão (seção 3).
+  const operational = OPERATIONAL_PREFIXES.some((p) => pathname?.startsWith(p));
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -21,7 +27,7 @@ export function ShipChrome() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const showEffects = !simpleMode && !reducedMotion;
+  const showEffects = !simpleMode && !reducedMotion && !operational;
 
   if (!showEffects) return null;
 
