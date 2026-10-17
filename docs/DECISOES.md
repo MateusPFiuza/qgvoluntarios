@@ -158,3 +158,34 @@ Next.js: componentes de servidor não podem gravar cookie).
 `admin_accounts.role` é `adm` ou `radios`. O gestor de rádios passa pela
 mesma segunda barreira de senha (ele vê CPF/RG mascarados e assinaturas),
 mas só enxerga o módulo de rádios. ADMs também operam rádios.
+
+## 17. Rádios: conferência sem digitar CPF/RG (SUPOSIÇÃO, seção 9)
+
+A retirada mostra CPF e RG mascarados para o voluntário conferir. Se a
+organização exigir digitação, `RADIO_REQUIRE_TYPED_DOCS=true` passa a
+pedir os 4 últimos dígitos do CPF, conferidos no servidor. Ponto único:
+`lib/config.ts`. CPF/RG só são lidos em `getMaskedDocuments`
+(`lib/server/repo-radios.ts`), que já devolve tudo mascarado.
+
+## 18. Rádio "não devolvido"
+
+Retirada aberta de um dia anterior, ou do mesmo dia depois das 23h
+(`END_OF_DAY_HM` em `lib/rules/radios.ts`).
+
+## 19. Assinatura obrigatória e atômica
+
+Sem a assinatura gravada no bucket privado `signatures`, a retirada é
+desfeita e a tela mostra erro (princípio 6). Na demonstração sem Supabase,
+a assinatura fica em memória. As retiradas da semente não têm assinatura
+(marcadas como exemplo).
+
+## 20. "Quem devolveu"
+
+`returned_by` é o operador que registrou; `returned_by_volunteer_id` é a
+pessoa que entregou o rádio (padrão: quem retirou). Liberar rádio com
+defeito ou marcar como perdido é só para ADM.
+
+## 21. Gestor de rádios de exemplo
+
+Na semente, Diego Lima (equipe Space) é gestor de rádios, senha
+`radios2026`. A conta é criada por `scripts/seed-demo-event.ts`.

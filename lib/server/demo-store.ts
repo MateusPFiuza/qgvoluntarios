@@ -6,6 +6,8 @@ import eventDaysSeed from "@/supabase/seed/demo/event_days.json";
 import mealsSeed from "@/supabase/seed/demo/meals.json";
 import teamMealWindowsSeed from "@/supabase/seed/demo/team_meal_windows.json";
 import mealCheckinsSeed from "@/supabase/seed/demo/meal_checkins.json";
+import radiosSeed from "@/supabase/seed/demo/radios.json";
+import radioCheckoutsSeed from "@/supabase/seed/demo/radio_checkouts.json";
 
 /**
  * Armazenamento em memória usado quando o Supabase real não está
@@ -97,6 +99,23 @@ export type AuditRow = {
   created_at: string;
 };
 
+export type Radio = { id: string; number: number; status: "ok" | "defeito" | "perdido"; notes: string | null; is_mock: boolean };
+
+export type RadioCheckout = {
+  id: string;
+  radio_id: string;
+  volunteer_id: string;
+  checked_out_at: string;
+  checked_out_by: string | null;
+  signature_path: string | null;
+  returned_at: string | null;
+  returned_by: string | null;
+  returned_by_volunteer_id: string | null;
+  battery_state: "carregado" | "parcial" | "descarregado" | null;
+  condition: "ok" | "defeito" | null;
+  is_mock?: boolean;
+};
+
 type StoreShape = {
   teams: Team[];
   volunteers: Volunteer[];
@@ -108,9 +127,13 @@ type StoreShape = {
   teamMealWindows: TeamMealWindow[];
   mealCheckins: MealCheckin[];
   auditLog: AuditRow[];
+  radios: Radio[];
+  radioCheckouts: RadioCheckout[];
+  /** Assinaturas em memória (data URL PNG), no lugar do bucket privado do Supabase. */
+  signatures: Map<string, string>;
 };
 
-const globalForDemoStore = globalThis as unknown as { __qg26DemoStoreV2?: StoreShape };
+const globalForDemoStore = globalThis as unknown as { __qg26DemoStoreV3?: StoreShape };
 
 function initStore(): StoreShape {
   return {
@@ -124,12 +147,15 @@ function initStore(): StoreShape {
     teamMealWindows: structuredClone(teamMealWindowsSeed) as TeamMealWindow[],
     mealCheckins: structuredClone(mealCheckinsSeed) as MealCheckin[],
     auditLog: [],
+    radios: structuredClone(radiosSeed) as Radio[],
+    radioCheckouts: structuredClone(radioCheckoutsSeed) as RadioCheckout[],
+    signatures: new Map(),
   };
 }
 
 export function getDemoStore(): StoreShape {
-  if (!globalForDemoStore.__qg26DemoStoreV2) {
-    globalForDemoStore.__qg26DemoStoreV2 = initStore();
+  if (!globalForDemoStore.__qg26DemoStoreV3) {
+    globalForDemoStore.__qg26DemoStoreV3 = initStore();
   }
-  return globalForDemoStore.__qg26DemoStoreV2;
+  return globalForDemoStore.__qg26DemoStoreV3;
 }

@@ -12,6 +12,7 @@ export default async function QgPage() {
   const items = [
     isAdm && config.mealsEnabled() && { href: "/qg/refeicoes", label: "Check-in de refeição", hint: "Ler QR ou buscar nome" },
     isAdm && config.mealsEnabled() && { href: "/qg/refeicoes/painel", label: "Painel de refeições", hint: "Consumidas, restantes, quem falta" },
+    { href: "/qg/radios", label: "Rádios", hint: "Retirada com assinatura, devolução, painel" },
   ].filter(Boolean) as { href: string; label: string; hint: string }[];
 
   return (

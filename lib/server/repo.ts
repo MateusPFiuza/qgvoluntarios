@@ -141,3 +141,4 @@ export async function setVolunteerLock(volunteerId: string, until: Date | null):
 }
 
 export * from "./repo-meals";
+export * from "./repo-radios";
