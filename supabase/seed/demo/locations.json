@@ -1,0 +1,119 @@
+[
+  {
+    "id": "70000000-0000-4000-8000-000000000001",
+    "name": "Palco principal",
+    "kind": "palco",
+    "description": "Arena das sessões",
+    "map_x": 50,
+    "map_y": 14,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000002",
+    "name": "Capela",
+    "kind": "oracao",
+    "description": "Adoração e confissões",
+    "map_x": 16,
+    "map_y": 18,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000003",
+    "name": "Sala de oração",
+    "kind": "oracao",
+    "description": "Intercessão",
+    "map_x": 84,
+    "map_y": 18,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000004",
+    "name": "Banheiros",
+    "kind": "banheiro",
+    "description": "Masculino e feminino",
+    "map_x": 14,
+    "map_y": 44,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000005",
+    "name": "Refeitório",
+    "kind": "refeitorio",
+    "description": "Refeições dos voluntários",
+    "map_x": 86,
+    "map_y": 44,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000006",
+    "name": "Enfermaria",
+    "kind": "enfermaria",
+    "description": "Primeiros socorros",
+    "map_x": 14,
+    "map_y": 62,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000007",
+    "name": "QG dos Voluntários",
+    "kind": "qg",
+    "description": "Rádios, achados e perdidos, apoio",
+    "map_x": 86,
+    "map_y": 62,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000008",
+    "name": "Loja",
+    "kind": "loja",
+    "description": "Produtos do evento",
+    "map_x": 34,
+    "map_y": 74,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000009",
+    "name": "Espaço kids",
+    "kind": "kids",
+    "description": "Crianças acompanhadas",
+    "map_x": 66,
+    "map_y": 74,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000010",
+    "name": "Acolhida",
+    "kind": "acolhida",
+    "description": "Recepção dos participantes",
+    "map_x": 22,
+    "map_y": 86,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000011",
+    "name": "Chapelaria",
+    "kind": "servico",
+    "description": "Guarda-volumes",
+    "map_x": 78,
+    "map_y": 86,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000012",
+    "name": "Portão principal",
+    "kind": "portao",
+    "description": "Entrada e check-in",
+    "map_x": 50,
+    "map_y": 94,
+    "is_mock": true
+  },
+  {
+    "id": "70000000-0000-4000-8000-000000000013",
+    "name": "Corredores",
+    "kind": "servico",
+    "description": "Circulação e apoio",
+    "map_x": 50,
+    "map_y": 46,
+    "is_mock": true
+  }
+]

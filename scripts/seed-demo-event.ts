@@ -138,6 +138,139 @@ export const radioCheckouts = [
 write("radios.json", radios);
 write("radio_checkouts.json", radioCheckouts);
 
+// ------------------------------------------------- Cronograma, mapa e escala (M3)
+// SUPOSIÇÃO: a planilha CRONOGRAMA_GERAÇÃO_2026_v1.xlsx não está neste ambiente;
+// este cronograma é de exemplo, coerente com os intervalos conhecidos.
+type S = [string, string, string, string, string, string | null];
+const SCHEDULE: Record<string, S[]> = {
+  [FRI]: [
+    ["Abertura", "17:00", "19:00", "portoes", "Abertura dos portões", null],
+    ["Sessão 01", "19:00", "19:40", "worship", "Worship de abertura", "Ministério de música (exemplo)"],
+    ["Sessão 01", "19:40", "19:50", "comunicacao", "Boas-vindas", null],
+    ["Sessão 01", "19:50", "20:50", "pregacao", "Pregação 01", "Pregador convidado (exemplo)"],
+    ["Sessão 01", "20:50", "21:30", "prayer", "Momento de oração", null],
+    ["Sessão 01", "21:30", "22:00", "worship", "Worship", "Ministério de música (exemplo)"],
+    ["Sessão 01", "22:00", "22:30", "comunicacao", "Avisos e encerramento do dia", null],
+  ],
+  [SAT]: [
+    ["Abertura", "08:00", "09:00", "portoes", "Abertura dos portões", null],
+    ["Sessão 02", "09:00", "09:40", "worship", "Worship", "Ministério de música (exemplo)"],
+    ["Sessão 02", "09:40", "10:40", "pregacao", "Pregação 02", "Pregador convidado (exemplo)"],
+    ["Sessão 02", "10:40", "10:55", "short", "Short 01", null],
+    ["Sessão 02", "10:55", "11:10", "pitch", "Pitch 01", null],
+    ["Sessão 02", "11:10", "12:05", "pregacao", "Pregação 03", "Pregador convidado (exemplo)"],
+    ["Intervalo", "12:05", "14:00", "intervalo", "Almoço", null],
+    ["Sessão 03", "14:00", "14:40", "worship", "Worship", "Ministério de música (exemplo)"],
+    ["Sessão 03", "14:40", "15:40", "pregacao", "Pregação 04", "Pregador convidado (exemplo)"],
+    ["Sessão 03", "15:40", "16:10", "prayer", "Oração", null],
+    ["Intervalo", "16:10", "16:40", "intervalo", "Lanche", null],
+    ["Sessão 04", "16:40", "18:00", "missa", "Santa Missa", null],
+    ["Sessão 04", "18:00", "18:15", "short", "Short 02", null],
+    ["Sessão 04", "18:15", "18:40", "pregacao", "Pregação 05", "Pregador convidado (exemplo)"],
+    ["Intervalo", "18:40", "19:30", "intervalo", "Janta", null],
+    ["Sessão 05", "19:30", "20:10", "worship", "Worship", "Ministério de música (exemplo)"],
+    ["Sessão 05", "20:10", "21:10", "pregacao", "Pregação 06", "Pregador convidado (exemplo)"],
+    ["Sessão 05", "21:10", "22:00", "prayer", "Adoração", null],
+    ["Sessão 05", "22:00", "22:30", "comunicacao", "Avisos e encerramento do dia", null],
+  ],
+  [SUN]: [
+    ["Abertura", "08:00", "09:00", "portoes", "Abertura dos portões", null],
+    ["Sessão 06", "09:00", "09:40", "worship", "Worship", "Ministério de música (exemplo)"],
+    ["Sessão 06", "09:40", "10:40", "pregacao", "Pregação 07", "Pregador convidado (exemplo)"],
+    ["Sessão 06", "10:40", "11:00", "pitch", "Pitch 02", null],
+    ["Sessão 06", "11:00", "12:05", "pregacao", "Pregação 08", "Pregador convidado (exemplo)"],
+    ["Intervalo", "12:05", "13:35", "intervalo", "Almoço", null],
+    ["Sessão 07", "13:35", "15:00", "missa", "Missa de envio", null],
+    ["Sessão 07", "15:00", "15:30", "comunicacao", "Encerramento", null],
+    ["Intervalo", "15:30", "16:00", "intervalo", "Lanche e saída", null],
+  ],
+};
+
+let schSeq = 0;
+export const scheduleItems = Object.entries(SCHEDULE).flatMap(([date, rows]) =>
+  rows.map(([session, s, e, kind, title, performer]) => ({
+    id: id("60000000", ++schSeq),
+    day_id: dayId(date),
+    session_label: session,
+    starts_at: at(date, s),
+    ends_at: at(date, e),
+    title,
+    performer,
+    kind,
+    is_mock: true,
+  })),
+);
+
+const LOC: [string, string, number, number, string][] = [
+  ["Palco principal", "palco", 50, 14, "Arena das sessões"],
+  ["Capela", "oracao", 16, 18, "Adoração e confissões"],
+  ["Sala de oração", "oracao", 84, 18, "Intercessão"],
+  ["Banheiros", "banheiro", 14, 44, "Masculino e feminino"],
+  ["Refeitório", "refeitorio", 86, 44, "Refeições dos voluntários"],
+  ["Enfermaria", "enfermaria", 14, 62, "Primeiros socorros"],
+  ["QG dos Voluntários", "qg", 86, 62, "Rádios, achados e perdidos, apoio"],
+  ["Loja", "loja", 34, 74, "Produtos do evento"],
+  ["Espaço kids", "kids", 66, 74, "Crianças acompanhadas"],
+  ["Acolhida", "acolhida", 22, 86, "Recepção dos participantes"],
+  ["Chapelaria", "servico", 78, 86, "Guarda-volumes"],
+  ["Portão principal", "portao", 50, 94, "Entrada e check-in"],
+  ["Corredores", "servico", 50, 46, "Circulação e apoio"],
+];
+export const locations = LOC.map(([name, kind, x, y, description], i) => ({
+  id: id("70000000", i + 1),
+  name,
+  kind,
+  description,
+  map_x: x,
+  map_y: y,
+  is_mock: true,
+}));
+const loc = (name: string) => locations.find((l) => l.name === name)!.id;
+
+const TEAM_POST: Record<string, [string, string]> = {
+  Acolhida: ["Acolhida", "Recepção dos participantes"],
+  "Check In": ["Portão principal", "Check-in de pulseiras"],
+  Chapelaria: ["Chapelaria", "Guarda-volumes"],
+  Space: ["Palco principal", "Apoio de palco"],
+  Rahamim: ["Capela", "Acolhimento na capela"],
+  Spoleta: ["Corredores", "Apoio volante"],
+  "Anástasis": ["Sala de oração", "Intercessão"],
+  "Alimentação": ["Refeitório", "Preparo e serviço"],
+  "QG dos Voluntários": ["QG dos Voluntários", "Plantão do QG"],
+};
+
+const DAY_BLOCKS: Record<string, [string, string, boolean][]> = {
+  [FRI]: [["16:00", "19:00", false], ["19:00", "22:30", false]],
+  [SAT]: [["07:30", "12:05", false], ["12:05", "14:00", true], ["14:00", "16:10", false], ["16:10", "16:40", true], ["16:40", "18:40", false], ["18:40", "19:30", true], ["19:30", "22:30", false]],
+  [SUN]: [["07:30", "12:05", false], ["12:05", "13:35", true], ["13:35", "15:30", false], ["15:30", "16:00", true]],
+};
+
+let tsSeq = 0;
+export const teamSchedule = teams.flatMap((t) =>
+  Object.entries(DAY_BLOCKS).flatMap(([date, blocks]) =>
+    blocks.map(([s, e, isBreak]) => {
+      const [post, activity] = TEAM_POST[t.name] ?? ["Corredores", "Apoio"];
+      const staysOnPost = t.name === "Alimentação" || t.name === "QG dos Voluntários";
+      const onBreak = isBreak && !staysOnPost;
+      return {
+        id: id("80000000", ++tsSeq),
+        team_id: t.id,
+        day_id: dayId(date),
+        starts_at: at(date, s),
+        ends_at: at(date, e),
+        location_id: onBreak ? loc("Refeitório") : loc(post),
+        activity: onBreak ? "Intervalo (refeição no horário da equipe)" : isBreak && t.name === "Alimentação" ? "Servindo refeições" : activity,
+        is_break: onBreak,
+        is_mock: true,
+      };
+    }),
+  ),
+);
+
+write("schedule_items.json", scheduleItems);
+write("locations.json", locations);
+write("team_schedule.json", teamSchedule);
+
 write("event_days.json", eventDays);
 write("meals.json", meals);
 write("team_meal_windows.json", teamMealWindows);
