@@ -218,3 +218,48 @@ desenho em `components/MapView.tsx` e as coordenadas na tabela.
 
 Nas telas do voluntário, check-ins com horário depois do "agora" simulado
 não contam, para a demonstração ficar coerente ao voltar no tempo.
+
+## 26. Anonimato dos elogios garantido em camadas (seção 8, critério 4)
+
+- `lib/server/repo-praise.ts` nunca devolve `sender_id`: só totais
+  (`praise_totals_by_window`) ou "o que eu mesmo enviei".
+- A rota `/api/praise` responde só `{ ok, on }`.
+- O alerta de reciprocidade é um número (`praise_reciprocal_pairs`), sem
+  identificar ninguém.
+- Visão e função têm `revoke` para `anon`/`authenticated`.
+
+## 27. Janela aberta exigida também no banco (critério 6)
+
+Gatilho `trg_praises_open_window` rejeita inserir, alterar ou apagar
+elogio com a janela fechada. Só uma janela aberta por vez (índice único
+parcial); abrir uma nova fecha a anterior. O `seed.sql` suspende o gatilho
+apenas para carregar os elogios de exemplo da janela já fechada.
+
+## 28. Repetir um elogio é idempotente
+
+Acender de novo o mesmo ícone não cria segundo registro (unicidade
+`window_id, sender_id, receiver_id, trait`). Desligar apaga o próprio
+elogio enquanto a janela está aberta (SUPOSIÇÃO da seção 8).
+
+## 29. Vídeo explicativo (PENDENTE)
+
+`explainer_video_url` em `app_settings` (ou `EXPLAINER_VIDEO_URL` sem
+Supabase). Sem URL, toca uma animação de 20 s marcada "vídeo de exemplo".
+O botão "Entendi" libera no fim do vídeo, ou 15 s depois de abrir se o
+vídeo não carregar.
+
+## 30. Pins (PENDENTE: correspondência e estoque)
+
+Correspondência provisória: Feliz = astronauta na lua, Facilitador =
+foguete, Por inteiro = capacete com galáxia (`TRAIT_INFO` em
+`lib/rules/praise.ts`), com selo "sujeita a confirmação". Desenhos
+provisórios em `components/PinIcon.tsx`. Estoque por pin:
+`PIN_STOCK_PER_TRAIT` (padrão 30). Um mesmo pin não é concedido duas vezes
+à mesma pessoa.
+
+## 31. Aviso de privacidade na primeira entrada (PENDENTE: texto)
+
+`volunteers.privacy_accepted_at`. Enquanto não aceitar, a tela inicial
+mostra o aviso. Texto provisório marcado como exemplo em
+`app/privacidade/page.tsx`. Na demonstração sem Supabase, o aceite fica em
+memória.

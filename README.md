@@ -94,3 +94,20 @@ docs/
 Check-in de refeições, gestão de rádios, janelas de elogios e os painéis
 de mapa/cronograma ficam para M1+, conforme a ordem de entrega da seção
 13 da especificação.
+
+## Módulos (M1 a M4)
+
+| Marco | Telas | Onde |
+|---|---|---|
+| M1 Refeições | QR pessoal (`/minha-identificacao`), check-in do QG (`/qg/refeicoes`), painel (`/qg/refeicoes/painel`) | `lib/rules/meals.ts`, `lib/rules/qr-token.ts` |
+| M2 Rádios | Retirada com assinatura, devolução, painel e histórico (`/qg/radios`) | `lib/rules/radios.ts` |
+| M3 Início | Painel de missão (`/`), cronograma, refeições, mapa, busca, abas | `lib/rules/mission.ts` |
+| M4 Elogios | Elogios com vídeo (`/elogios`), janelas, ranking e pins (`/qg/elogios`) | `lib/rules/praise.ts` |
+
+Logins de teste: `supabase/seed/demo/LOGINS_DE_TESTE.md`. Na demonstração o
+relógio começa no sábado às 12h40; troque pelo painel "Relógio" na tela
+inicial para percorrer o evento.
+
+Semente dos módulos: `npm run seed:demo:event` e depois `npm run seed:demo:sql`.
+Migrações: aplicar `supabase/migrations/0001` a `0005` em ordem.
+Configurações dos módulos: `lib/config.ts` e `.env.example`.

@@ -16,4 +16,6 @@ export const config = {
   // Relógio padrão da demonstração: sábado no almoço, para as telas terem movimento.
   demoDefaultNow: "2026-12-12T12:40:00-03:00",
   adminIdleMinutes: 30,
+  // PENDENTE: estoque real dos 3 pins do kit.
+  pinStockPerTrait: () => Number(process.env.PIN_STOCK_PER_TRAIT ?? 30),
 };

@@ -7,6 +7,7 @@ import { getAdminSession } from "@/lib/server/session";
 import {
   getAdminAccountByVolunteerId,
   getVolunteerById,
+  hasAcceptedPrivacy,
   listCheckins,
   listLocations,
   listMeals,
@@ -20,11 +21,13 @@ import { nextMealForVolunteer } from "@/lib/rules/meals";
 import { formatCountdown, formatHM, isWithin, toDate, weekdayName } from "@/lib/rules/time";
 import { AppShell } from "@/components/AppShell";
 import { ClockControl } from "@/components/ClockControl";
+import { PrivacyGate } from "@/components/PrivacyGate";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const session = await requireVolunteerPage();
+  if (!(await hasAcceptedPrivacy(session.sub))) return <PrivacyGate />;
   const now = await getNow();
   const [volunteer, teams, schedule, teamSlots, meals, windows, myCheckins, locations, adminAccount, adminSession, simulated] = await Promise.all([
     getVolunteerById(session.sub),
