@@ -189,3 +189,32 @@ defeito ou marcar como perdido é só para ADM.
 
 Na semente, Diego Lima (equipe Space) é gestor de rádios, senha
 `radios2026`. A conta é criada por `scripts/seed-demo-event.ts`.
+
+## 22. Cronograma de exemplo (PENDENTE: planilha não disponível)
+
+A planilha `CRONOGRAMA_GERAÇÃO_2026_v1.xlsx` não está neste ambiente. A
+semente traz um cronograma de exemplo (marcado `is_mock` e com selo
+"cronograma de exemplo"), coerente com os intervalos conhecidos (sábado
+12h05–14h, 16h10–16h40, 18h40–19h30; domingo 12h05–13h35). Para trocar,
+importar a aba `CRONOGRAMA` em `schedule_items` (ignorando `Página6` e
+`LISTA CONVIDADOS`) e apagar as linhas `is_mock`. Encerramento do evento:
+domingo 16h (`config.eventEnd`).
+
+## 23. Escala e local provável
+
+A escala por equipe (`team_schedule`) tem `is_break` para intervalos. A
+busca mostra só o local previsto, com o aviso "local previsto pela escala,
+pode ter mudado", e nunca telefone ou dados pessoais. Alimentação e QG
+ficam no posto durante os intervalos.
+
+## 24. Mapa ilustrativo
+
+Desenho esquemático em SVG com pontos clicáveis (botões de 48 px,
+posicionados em % via `locations.map_x/map_y`). Zoom por botões e pela
+pinça nativa do navegador. Quando a imagem oficial chegar, basta trocar o
+desenho em `components/MapView.tsx` e as coordenadas na tabela.
+
+## 25. Registros "do futuro" com relógio simulado
+
+Nas telas do voluntário, check-ins com horário depois do "agora" simulado
+não contam, para a demonstração ficar coerente ao voltar no tempo.

@@ -6,6 +6,9 @@ import eventDaysSeed from "@/supabase/seed/demo/event_days.json";
 import mealsSeed from "@/supabase/seed/demo/meals.json";
 import teamMealWindowsSeed from "@/supabase/seed/demo/team_meal_windows.json";
 import mealCheckinsSeed from "@/supabase/seed/demo/meal_checkins.json";
+import scheduleItemsSeed from "@/supabase/seed/demo/schedule_items.json";
+import locationsSeed from "@/supabase/seed/demo/locations.json";
+import teamScheduleSeed from "@/supabase/seed/demo/team_schedule.json";
 import radiosSeed from "@/supabase/seed/demo/radios.json";
 import radioCheckoutsSeed from "@/supabase/seed/demo/radio_checkouts.json";
 
@@ -116,6 +119,32 @@ export type RadioCheckout = {
   is_mock?: boolean;
 };
 
+export type ScheduleItem = {
+  id: string;
+  day_id: string;
+  session_label: string;
+  starts_at: string;
+  ends_at: string;
+  title: string;
+  performer: string | null;
+  kind: string;
+  is_mock: boolean;
+};
+
+export type Location = { id: string; name: string; kind: string; description: string | null; map_x: number; map_y: number; is_mock: boolean };
+
+export type TeamScheduleRow = {
+  id: string;
+  team_id: string;
+  day_id: string;
+  starts_at: string;
+  ends_at: string;
+  location_id: string | null;
+  activity: string;
+  is_break: boolean;
+  is_mock: boolean;
+};
+
 type StoreShape = {
   teams: Team[];
   volunteers: Volunteer[];
@@ -127,13 +156,16 @@ type StoreShape = {
   teamMealWindows: TeamMealWindow[];
   mealCheckins: MealCheckin[];
   auditLog: AuditRow[];
+  scheduleItems: ScheduleItem[];
+  locations: Location[];
+  teamSchedule: TeamScheduleRow[];
   radios: Radio[];
   radioCheckouts: RadioCheckout[];
   /** Assinaturas em memória (data URL PNG), no lugar do bucket privado do Supabase. */
   signatures: Map<string, string>;
 };
 
-const globalForDemoStore = globalThis as unknown as { __qg26DemoStoreV3?: StoreShape };
+const globalForDemoStore = globalThis as unknown as { __qg26DemoStoreV4?: StoreShape };
 
 function initStore(): StoreShape {
   return {
@@ -147,6 +179,9 @@ function initStore(): StoreShape {
     teamMealWindows: structuredClone(teamMealWindowsSeed) as TeamMealWindow[],
     mealCheckins: structuredClone(mealCheckinsSeed) as MealCheckin[],
     auditLog: [],
+    scheduleItems: structuredClone(scheduleItemsSeed) as ScheduleItem[],
+    locations: structuredClone(locationsSeed) as Location[],
+    teamSchedule: structuredClone(teamScheduleSeed) as TeamScheduleRow[],
     radios: structuredClone(radiosSeed) as Radio[],
     radioCheckouts: structuredClone(radioCheckoutsSeed) as RadioCheckout[],
     signatures: new Map(),
@@ -154,8 +189,8 @@ function initStore(): StoreShape {
 }
 
 export function getDemoStore(): StoreShape {
-  if (!globalForDemoStore.__qg26DemoStoreV3) {
-    globalForDemoStore.__qg26DemoStoreV3 = initStore();
+  if (!globalForDemoStore.__qg26DemoStoreV4) {
+    globalForDemoStore.__qg26DemoStoreV4 = initStore();
   }
-  return globalForDemoStore.__qg26DemoStoreV3;
+  return globalForDemoStore.__qg26DemoStoreV4;
 }
