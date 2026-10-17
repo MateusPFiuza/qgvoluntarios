@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Sansgeo Placeholder", ui-monospace, monospace;
+  --font-mono: "Andale Mono Placeholder", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html,
+body {
+  background-color: #0b0806;
+  color: #f3e6cc;
+}
+
+body {
+  min-width: 360px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Alvos de toque mínimos de 48px (seção 3) */
+.tap-target {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Foco visível sempre (acessibilidade) */
+:focus-visible {
+  outline: 2px solid #e8b85a;
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   Efeitos de "tela de nave" — ligados por padrão, desligados pelo
+   Modo Simples (classe .modo-simples no <html>) e por prefers-reduced-motion.
+   Seção 3: nunca mais de 3 piscadas por segundo, pausado quando a aba
+   está oculta (controlado via JS em components/ship-fx).
+--------------------------------------------------------------------- */
+
+.fx-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.035) 0px,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+.fx-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 55%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.fx-glow-text {
+  text-shadow: 0 0 6px rgba(232, 184, 90, 0.35);
+}
+
+.fx-cursor::after {
+  content: "_";
+  display: inline-block;
+  animation: blinkcursor 1s steps(1) infinite;
+}
+
+/* Modo Simples: desliga tudo */
+html.modo-simples .fx-scanlines,
+html.modo-simples .fx-vignette,
+html.modo-simples .fx-starfield {
+  display: none !important;
+}
+html.modo-simples .fx-glow-text {
+  text-shadow: none !important;
+}
+html.modo-simples .fx-cursor::after {
+  animation: none !important;
+}
+
+/* prefers-reduced-motion: mesma coisa, automaticamente */
+@media (prefers-reduced-motion: reduce) {
+  .fx-scanlines,
+  .fx-vignette,
+  .fx-starfield {
+    display: none !important;
+  }
+  .fx-glow-text {
+    text-shadow: none !important;
+  }
+  .fx-cursor::after {
+    animation: none !important;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.fx-starfield {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.faixa-demo {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #c8232c;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+}
+
+.selo-exemplo {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  border: 1px solid #8a7245;
+  color: #b89a63;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.painel {
+  background-color: #15100b;
+  border: 1px solid #201811;
+  border-radius: 10px;
+  position: relative;
+}
+
+.painel::before,
+.painel::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: #e8b85a;
+  opacity: 0.6;
+}
+.painel::before {
+  top: 6px;
+  left: 6px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.painel::after {
+  bottom: 6px;
+  right: 6px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}

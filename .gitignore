@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env*.local
+*.log
+.DS_Store
+# Dados reais de voluntários nunca entram no repositório
+data/real/
+scripts/data/
+supabase/seed/real/
+coverage/
