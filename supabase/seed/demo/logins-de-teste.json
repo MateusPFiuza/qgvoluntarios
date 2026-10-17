@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Ana Barros",
+    "cpfLast4": "1000",
+    "birthDDMM": "0101",
+    "team": "Acolhida",
+    "role": "líder"
+  },
+  {
+    "name": "Bruno Esteves",
+    "cpfLast4": "1137",
+    "birthDDMM": "0203",
+    "team": "Check In",
+    "role": "voluntário"
+  },
+  {
+    "name": "Camila Henriques",
+    "cpfLast4": "1274",
+    "birthDDMM": "0305",
+    "team": "Chapelaria",
+    "role": "voluntário"
+  },
+  {
+    "name": "Diego Lima",
+    "cpfLast4": "1411",
+    "birthDDMM": "0407",
+    "team": "Space",
+    "role": "voluntário"
+  },
+  {
+    "name": "Elisa Oliveira",
+    "cpfLast4": "1548",
+    "birthDDMM": "0509",
+    "team": "Rahamim",
+    "role": "voluntário"
+  },
+  {
+    "name": "Fábio Ramos",
+    "cpfLast4": "1685",
+    "birthDDMM": "0611",
+    "team": "Spoleta",
+    "role": "voluntário"
+  },
+  {
+    "name": "Clara Mendes (ADM) — senha ADM: qg2026-clara",
+    "cpfLast4": "0000",
+    "birthDDMM": "0101",
+    "team": "QG dos Voluntários",
+    "role": "ADM"
+  },
+  {
+    "name": "Rodrigo Teles (ADM) — senha ADM: qg2026-rodrigo",
+    "cpfLast4": "0000",
+    "birthDDMM": "0101",
+    "team": "QG dos Voluntários",
+    "role": "ADM"
+  }
+]

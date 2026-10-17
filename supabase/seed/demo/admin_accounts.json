@@ -1,0 +1,14 @@
+[
+  {
+    "volunteer_id": "357d31b6-4ca0-45d6-bbc9-77d8c2f4379c",
+    "password_hash": "$argon2id$v=19$m=19456,t=3,p=1$LtH5E4pl6dzxpdRLhltvMg$tgqv/+oG/FQkkdr49vfjN8pJ9T2YdJDoiYC8NNQ0iIM",
+    "can_manage_radios": true,
+    "locked_until": null
+  },
+  {
+    "volunteer_id": "a7f87cc1-1889-47e0-9fa7-300ab17481e6",
+    "password_hash": "$argon2id$v=19$m=19456,t=3,p=1$PQM4KsXhYHxEWpOgf/IHXQ$ST2lhIlBXa8rKS7lT820tn/qCUWlVwqy5mHzduFSFiA",
+    "can_manage_radios": false,
+    "locked_until": null
+  }
+]

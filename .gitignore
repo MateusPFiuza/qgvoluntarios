@@ -11,3 +11,4 @@ data/real/
 scripts/data/
 supabase/seed/real/
 coverage/
+tsconfig.tsbuildinfo
