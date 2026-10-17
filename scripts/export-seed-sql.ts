@@ -5,7 +5,7 @@
  *
  * Uso: npm run seed:demo:sql (depende de já ter rodado npm run seed:demo)
  */
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import teams from "../supabase/seed/demo/teams.json";
 import volunteers from "../supabase/seed/demo/volunteers.json";
@@ -18,6 +18,13 @@ function sqlStr(value: string | null | undefined): string {
 }
 function sqlBool(value: boolean): string {
   return value ? "true" : "false";
+}
+function sqlValue(value: unknown): string {
+  if (value === null || value === undefined) return "null";
+  if (typeof value === "boolean") return sqlBool(value);
+  if (typeof value === "number") return String(value);
+  if (typeof value === "object") return `${sqlStr(JSON.stringify(value))}::jsonb`;
+  return sqlStr(String(value));
 }
 
 function main() {
@@ -51,9 +58,37 @@ function main() {
 
   for (const a of adminAccounts as any[]) {
     lines.push(
-      `insert into admin_accounts (volunteer_id, password_hash, can_manage_radios, locked_until) values (${sqlStr(a.volunteer_id)}, ${sqlStr(a.password_hash)}, ${sqlBool(a.can_manage_radios)}, null) on conflict (volunteer_id) do nothing;`,
+      `insert into admin_accounts (volunteer_id, password_hash, can_manage_radios, role, locked_until) values (${sqlStr(a.volunteer_id)}, ${sqlStr(a.password_hash)}, ${sqlBool(a.can_manage_radios)}, ${sqlStr(a.role ?? "adm")}, null) on conflict (volunteer_id) do nothing;`,
     );
   }
+  // Tabelas dos módulos do evento (geradas por scripts/seed-demo-event.ts).
+  const genericTables: [string, string][] = [
+    ["event_days", "id"],
+    ["meals", "id"],
+    ["team_meal_windows", "team_id, meal_id"],
+    ["meal_checkins", "id"],
+    ["volunteer_permissions", "volunteer_id"],
+    ["radios", "id"],
+    ["radio_checkouts", "id"],
+    ["locations", "id"],
+    ["schedule_items", "id"],
+    ["team_schedule", "id"],
+    ["praise_windows", "id"],
+    ["praises", "id"],
+    ["pin_awards", "id"],
+  ];
+  for (const [table, conflict] of genericTables) {
+    const file = path.resolve(__dirname, `../supabase/seed/demo/${table}.json`);
+    if (!existsSync(file)) continue;
+    const rows = JSON.parse(readFileSync(file, "utf8")) as Record<string, unknown>[];
+    for (const row of rows) {
+      const cols = Object.keys(row);
+      const vals = cols.map((c) => sqlValue(row[c]));
+      lines.push(`insert into ${table} (${cols.join(", ")}) values (${vals.join(", ")}) on conflict (${conflict}) do nothing;`);
+    }
+    lines.push("");
+  }
+
   lines.push("", "commit;", "");
 
   const outPath = path.resolve(__dirname, "../supabase/seed/demo/seed.sql");
