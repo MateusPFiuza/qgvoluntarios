@@ -75,7 +75,7 @@ export function RadioConsole() {
           </button>
         ))}
       </div>
-      {loadError && <p role="alert" className="text-nave-danger">⚠ {loadError}</p>}
+      {loadError && <p role="alert" className="text-nave-danger">{loadError}</p>}
       {tab === "retirar" && <CheckoutFlow radios={radios} onDone={reload} />}
       {tab === "devolver" && <ReturnFlow radios={radios} onDone={reload} />}
       {tab === "painel" && <RadioPanel radios={radios} isAdm={isAdm} onChange={reload} />}
@@ -120,6 +120,7 @@ function CheckoutFlow({ radios, onDone }: { radios: RadioRow[]; onDone: () => vo
       setVol(null);
       setRadioId("");
       setTypedCpf("");
+      sigRef.current?.clear();
       onDone();
     } catch (e) {
       setMsg({ ok: false, text: e instanceof Error ? e.message : "Erro." });
@@ -132,7 +133,7 @@ function CheckoutFlow({ radios, onDone }: { radios: RadioRow[]; onDone: () => vo
     <div className="flex flex-col gap-4">
       {msg && (
         <p role="status" className={`rounded border-2 p-3 text-lg ${msg.ok ? "border-nave-success text-nave-success" : "border-nave-danger text-nave-danger"}`}>
-          {msg.ok ? "✔ " : "⚠ "}
+          
           {msg.text}
         </p>
       )}
@@ -140,26 +141,26 @@ function CheckoutFlow({ radios, onDone }: { radios: RadioRow[]; onDone: () => vo
         <VolunteerPicker label="1. Quem vai retirar" onPick={pick} />
       ) : (
         <div className="painel flex flex-col gap-1 p-4">
-          <p className="font-mono text-xs uppercase text-nave-text-secondary">1. Confira com o voluntário</p>
+          <p className="label-mono">1. Confira com o voluntário</p>
           <p className="text-xl">{vol.fullName}</p>
           <p className="text-nave-text-secondary">{vol.teamName ?? "Sem equipe"}</p>
           <p className="font-mono">CPF {vol.cpfMasked}</p>
           <p className="font-mono">RG {vol.rgMasked}</p>
-          {vol.openRadios.length > 0 && <p className="text-nave-warn">⚠ Já está com o rádio {vol.openRadios.join(", ")}</p>}
+          {vol.openRadios.length > 0 && <p className="text-nave-warn">Já está com o rádio {vol.openRadios.join(", ")}</p>}
           {vol.requireTypedDocs && (
             <label className="mt-2 flex flex-col gap-1">
               <span className="text-sm">4 últimos dígitos do CPF (digitados pelo voluntário)</span>
               <input inputMode="numeric" maxLength={4} value={typedCpf} onChange={(e) => setTypedCpf(e.target.value.replace(/\D/g, ""))} className="tap-target rounded border border-nave-gold-dim bg-nave-bg px-3 text-nave-text" />
             </label>
           )}
-          <button onClick={() => setVol(null)} className="tap-target mt-2 self-start font-mono text-xs uppercase text-nave-text-secondary underline">
+          <button onClick={() => setVol(null)} className="tap-target mt-2 self-start label-mono underline">
             Trocar voluntário
           </button>
         </div>
       )}
 
       <label className="flex flex-col gap-1">
-        <span className="font-mono text-xs uppercase text-nave-text-secondary">2. Rádio ({available.length} disponíveis)</span>
+        <span className="label-mono">2. Rádio ({available.length} disponíveis)</span>
         <select value={radioId} onChange={(e) => setRadioId(e.target.value)} className="tap-target rounded border border-nave-gold bg-nave-bg px-3 text-lg text-nave-text">
           <option value="">Escolha o número</option>
           {available.map((r) => (
@@ -171,7 +172,7 @@ function CheckoutFlow({ radios, onDone }: { radios: RadioRow[]; onDone: () => vo
       </label>
 
       <div className="flex flex-col gap-1">
-        <span className="font-mono text-xs uppercase text-nave-text-secondary">3. Assinatura do voluntário</span>
+        <span className="label-mono">3. Assinatura do voluntário</span>
         <SignatureField ref={sigRef} />
       </div>
 
@@ -213,7 +214,7 @@ function ReturnFlow({ radios, onDone }: { radios: RadioRow[]; onDone: () => void
     <div className="flex flex-col gap-4">
       {msg && (
         <p role="status" className={`rounded border-2 p-3 text-lg ${msg.ok ? "border-nave-success text-nave-success" : "border-nave-danger text-nave-danger"}`}>
-          {msg.ok ? "✔ " : "⚠ "}
+          
           {msg.text}
         </p>
       )}
@@ -227,7 +228,7 @@ function ReturnFlow({ radios, onDone }: { radios: RadioRow[]; onDone: () => void
         ))}
       </select>
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1 font-mono text-xs uppercase text-nave-text-secondary">Bateria</legend>
+        <legend className="mb-1 label-mono">Bateria</legend>
         <div className="grid grid-cols-3 gap-2">
           {(["carregado", "parcial", "descarregado"] as const).map((b) => (
             <button key={b} type="button" aria-pressed={battery === b} onClick={() => setBattery(b)} className={choice(battery === b)}>
@@ -237,11 +238,11 @@ function ReturnFlow({ radios, onDone }: { radios: RadioRow[]; onDone: () => void
         </div>
       </fieldset>
       <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1 font-mono text-xs uppercase text-nave-text-secondary">Estado</legend>
+        <legend className="mb-1 label-mono">Estado</legend>
         <div className="grid grid-cols-2 gap-2">
           {(["ok", "defeito"] as const).map((c) => (
             <button key={c} type="button" aria-pressed={condition === c} onClick={() => setCondition(c)} className={choice(condition === c)}>
-              {c === "ok" ? "✔ ok" : "✖ defeito"}
+              {c === "ok" ? "ok" : "defeito"}
             </button>
           ))}
         </div>
@@ -277,7 +278,7 @@ function RadioPanel({ radios, isAdm, onChange }: { radios: RadioRow[]; isAdm: bo
     <div className="flex flex-col gap-3">
       {overdue.length > 0 && (
         <div role="alert" className="rounded border-2 border-nave-danger p-3">
-          <p className="font-bold text-nave-danger">⚠ {overdue.length} rádio(s) não devolvido(s) no fim do dia</p>
+          <p className="font-bold text-nave-danger">{overdue.length} rádio(s) não devolvido(s) no fim do dia</p>
           <ul className="text-sm">
             {overdue.map((r) => (
               <li key={r.id}>
@@ -301,9 +302,9 @@ function RadioPanel({ radios, isAdm, onChange }: { radios: RadioRow[]; isAdm: bo
                     {r.open.overdue && <strong className="ml-1 text-nave-danger">NÃO DEVOLVIDO</strong>}
                   </>
                 ) : r.status === "ok" ? (
-                  <span className="text-nave-success">✔ Disponível</span>
+                  <span className="text-nave-success">Disponível</span>
                 ) : (
-                  <span className="text-nave-danger">✖ {r.status === "defeito" ? "Defeito" : "Perdido"}{r.notes ? ` · ${r.notes}` : ""}</span>
+                  <span className="text-nave-danger">{r.status === "defeito" ? "Defeito" : "Perdido"}{r.notes ? ` · ${r.notes}` : ""}</span>
                 )}
               </p>
               {r.lastReturn && !r.open && (

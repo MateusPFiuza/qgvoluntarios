@@ -46,7 +46,7 @@ export const SignatureField = forwardRef<SignatureFieldHandle>(function Signatur
         aria-label="Campo de assinatura: assine com o dedo"
         className="h-44 w-full touch-none rounded border-2 border-nave-gold bg-white"
       />
-      <button type="button" onClick={() => padRef.current?.clear()} className="tap-target self-end rounded border border-nave-gold-dim px-3 font-mono text-xs uppercase text-nave-text-secondary">
+      <button type="button" onClick={() => padRef.current?.clear()} className="tap-target self-end rounded border border-nave-gold-dim px-3 label-mono">
         Limpar assinatura
       </button>
     </div>
