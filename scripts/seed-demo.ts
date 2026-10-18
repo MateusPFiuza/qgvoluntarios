@@ -99,10 +99,13 @@ async function main() {
 
   const totalVolunteers = 42;
 
+  const usedNames = new Set<string>();
   for (let i = 0; i < totalVolunteers; i++) {
     const first = pick(FIRST_NAMES, i);
-    const last = pick(LAST_NAMES, i * 3 + 1);
-    const fullName = `${first} ${last}`;
+    let offset = 0;
+    let fullName = `${first} ${pick(LAST_NAMES, i * 3 + 1)}`;
+    while (usedNames.has(fullName)) fullName = `${first} ${pick(LAST_NAMES, i * 3 + 2 + offset++)}`;
+    usedNames.add(fullName);
     const team = pick(teams as any[], i);
     const isLeader = i % 7 === 0; // alguns líderes
     const day = String((i % 28) + 1).padStart(2, "0");
@@ -192,7 +195,7 @@ async function main() {
     });
 
     demoCredentials.push({
-      name: `${def.name} — senha ADM: ${def.password}`,
+      name: `${def.name}, senha ADM: ${def.password}`,
       cpfLast4,
       birthDDMM,
       team: qgTeam.name,
@@ -206,7 +209,7 @@ async function main() {
   writeFileSync(path.join(outDir, "admin_accounts.json"), JSON.stringify(adminAccounts, null, 2));
 
   const readme = [
-    "# Logins de teste — modo demonstração",
+    "# Logins de teste, modo demonstração",
     "",
     "Dados 100% fictícios, gerados por scripts/seed-demo.ts. Nunca usar em produção.",
     "",
