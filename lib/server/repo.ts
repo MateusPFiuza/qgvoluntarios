@@ -40,6 +40,26 @@ export async function searchVolunteersByNormalizedName(normalizedQuery: string):
     .slice(0, 20);
 }
 
+export type DirectoryEntry = Pick<Volunteer, "id" | "full_name" | "search_name" | "team_id" | "is_leader">;
+
+/** Diretório para quem já entrou: só nome, equipe e líder, nunca dados pessoais. */
+export async function listVolunteerDirectory(): Promise<DirectoryEntry[]> {
+  const supabase = getSupabaseServerClient();
+  if (supabase) {
+    const { data, error } = await supabase
+      .from("volunteers")
+      .select("id, full_name, search_name, team_id, is_leader")
+      .eq("active", true)
+      .order("full_name");
+    if (error) throw error;
+    return data as DirectoryEntry[];
+  }
+  return getDemoStore()
+    .volunteers.filter((v) => v.active)
+    .map(({ id, full_name, search_name, team_id, is_leader }) => ({ id, full_name, search_name, team_id, is_leader }))
+    .sort((a, b) => a.full_name.localeCompare(b.full_name, "pt-BR"));
+}
+
 export async function getVolunteerById(id: string): Promise<Volunteer | null> {
   const supabase = getSupabaseServerClient();
   if (supabase) {

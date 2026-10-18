@@ -1,71 +1,106 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { shouldShowResults } from "@/lib/rules/name-search";
+import { useEffect, useMemo, useState } from "react";
+import { normalizeForSearch } from "@/lib/rules/name-search";
 
-export type PickedVolunteer = { id: string; fullName: string; teamName: string | null; isLeader: boolean };
+export type PickedVolunteer = { id: string; fullName: string; teamName: string | null; isLeader: boolean; teamId?: string | null };
+type Entry = PickedVolunteer & { searchName: string };
 
-/** Busca de voluntário por nome (3+ letras, sem acento) para as telas do QG. */
-export function VolunteerPicker({ onPick, label = "Buscar por nome", autoFocus }: { onPick: (v: PickedVolunteer) => void; label?: string; autoFocus?: boolean }) {
+let cache: Promise<Entry[]> | null = null;
+
+function loadDirectory(): Promise<Entry[]> {
+  if (!cache) {
+    cache = fetch("/api/volunteers/directory")
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error ?? "Não foi possível carregar a lista.");
+        return data.results as Entry[];
+      })
+      .catch((e) => {
+        cache = null;
+        throw e;
+      });
+  }
+  return cache;
+}
+
+/** Escolha de voluntário para quem já entrou: lista completa, filtrada enquanto digita. */
+export function VolunteerPicker({
+  onPick,
+  label = "Voluntário",
+  autoFocus,
+  maxHeight = "18rem",
+}: {
+  onPick: (v: PickedVolunteer) => void;
+  label?: string;
+  autoFocus?: boolean;
+  maxHeight?: string;
+}) {
+  const [all, setAll] = useState<Entry[] | null>(null);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<PickedVolunteer[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!shouldShowResults(query)) {
-      setResults([]);
-      return;
-    }
-    const t = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/volunteers/search?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-        setResults(data.results ?? []);
-        setError(null);
-      } catch (e) {
-        setError(e instanceof Error && e.message ? e.message : "Falha de conexão na busca.");
-      }
-    }, 200);
-    return () => clearTimeout(t);
-  }, [query]);
+    loadDirectory()
+      .then(setAll)
+      .catch((e) => setError(e instanceof Error ? e.message : "Falha de conexão."));
+  }, []);
+
+  const filtered = useMemo(() => {
+    if (!all) return [];
+    const q = normalizeForSearch(query);
+    return q ? all.filter((v) => normalizeForSearch(v.searchName || v.fullName).includes(q)) : all;
+  }, [all, query]);
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary" htmlFor="picker-q">
+      <label className="label-mono" htmlFor={`picker-${label}`}>
         {label}
       </label>
       <input
-        id="picker-q"
+        id={`picker-${label}`}
+        type="search"
         autoFocus={autoFocus}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Digite 3 letras ou mais"
+        placeholder="Filtrar por nome"
         autoComplete="off"
-        className="tap-target w-full rounded border border-nave-gold-dim bg-nave-bg px-3 text-base text-nave-text"
+        className="campo"
       />
-      {error && <p role="alert" className="text-sm text-nave-danger">⚠ {error}</p>}
-      <ul className="flex flex-col gap-1">
-        {results.map((r) => (
-          <li key={r.id}>
-            <button
-              type="button"
-              onClick={() => {
-                onPick(r);
-                setQuery("");
-                setResults([]);
-              }}
-              className="tap-target w-full rounded border border-nave-bezel bg-nave-panel px-3 py-2 text-left text-base hover:border-nave-gold"
-            >
-              {r.fullName}
-              <span className="ml-2 font-mono text-xs text-nave-text-secondary">
-                {r.teamName ?? "sem equipe"}
-                {r.isLeader ? " · ★ líder" : ""}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      {error && (
+        <p role="alert" className="text-sm text-nave-danger">
+          Erro: {error}
+        </p>
+      )}
+      {!all && !error && <p className="text-sm text-nave-text-secondary">Carregando lista…</p>}
+      {all && (
+        <>
+          <p className="text-xs text-nave-text-secondary" aria-live="polite">
+            {filtered.length} {filtered.length === 1 ? "voluntário" : "voluntários"}
+          </p>
+          <ul className="flex flex-col divide-y divide-nave-bezel overflow-y-auto rounded-lg border border-nave-bezel" style={{ maxHeight }}>
+            {filtered.map((r) => (
+              <li key={r.id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onPick(r);
+                    setQuery("");
+                  }}
+                  className="flex min-h-[52px] w-full items-center justify-between gap-3 px-4 py-2 text-left hover:bg-nave-panel focus-visible:bg-nave-panel"
+                >
+                  <span className="text-base">
+                    {r.fullName}
+                    {r.isLeader && <span className="ml-2 text-xs text-nave-gold">Líder</span>}
+                  </span>
+                  <span className="shrink-0 rounded bg-nave-bezel px-2 py-0.5 text-xs text-nave-text">{r.teamName ?? "Sem equipe"}</span>
+                </button>
+              </li>
+            ))}
+            {filtered.length === 0 && <li className="px-4 py-3 text-sm text-nave-text-secondary">Ninguém com esse nome.</li>}
+          </ul>
+        </>
+      )}
     </div>
   );
 }
