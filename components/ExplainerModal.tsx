@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TRAIT_INFO, TRAITS } from "@/lib/rules/praise";
+import { TraitIcon } from "./TraitIcon";
 
 const FAIL_UNLOCK_MS = 15_000;
-const MOCK_DURATION_MS = 20_000;
+const MOCK_DURATION_MS = 12_000;
 
 /**
  * Vídeo explicativo, mostrado toda vez que a área de elogios abre (seção 8).
@@ -32,7 +33,7 @@ export function ExplainerModal({ videoUrl, onClose }: { videoUrl: string | null;
   return (
     <div role="dialog" aria-modal="true" aria-labelledby="explainer-title" className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-4">
       <div className="painel flex w-full max-w-md flex-col gap-4 p-5">
-        <h2 id="explainer-title" className="font-display text-lg uppercase text-nave-gold">Como funcionam os elogios</h2>
+        <h2 id="explainer-title" className="font-display text-xl font-semibold text-nave-text">Como funcionam os elogios</h2>
         {videoUrl ? (
           <video
             src={videoUrl}
@@ -54,7 +55,7 @@ export function ExplainerModal({ videoUrl, onClose }: { videoUrl: string | null;
               </>
             ) : (
               <>
-                <p className="text-5xl" aria-hidden="true">{TRAIT_INFO[TRAITS[step - 1]].icon}</p>
+                <span className="text-nave-gold"><TraitIcon trait={TRAITS[step - 1]} size={56} /></span>
                 <p className="text-lg text-nave-gold">{TRAIT_INFO[TRAITS[step - 1]].label}</p>
                 <p className="text-sm">{TRAIT_INFO[TRAITS[step - 1]].meaning}</p>
               </>
@@ -72,9 +73,9 @@ export function ExplainerModal({ videoUrl, onClose }: { videoUrl: string | null;
         <button
           onClick={onClose}
           disabled={!done}
-          className="min-h-[52px] rounded bg-nave-gold font-mono text-base font-bold uppercase text-nave-bg disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-[52px] rounded-lg bg-nave-gold text-base font-semibold text-nave-bg disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {done ? "Entendi" : "Assista até o fim para continuar"}
+          {done ? "Entendi" : `Assista até o fim (${Math.max(0, Math.ceil(((videoUrl ? FAIL_UNLOCK_MS : MOCK_DURATION_MS) - elapsed) / 1000))} s)`}
         </button>
       </div>
     </div>

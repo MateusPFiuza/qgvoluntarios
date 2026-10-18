@@ -15,11 +15,11 @@ export default async function QgEntrarPage() {
 
   return (
     <div className="flex min-h-screen flex-col gap-6 px-4 py-8">
-      <h1 className="font-display text-lg uppercase tracking-wide text-nave-orange fx-glow-text">
+      <h1 className="font-display text-2xl font-semibold text-nave-text">
         Área do QG
       </h1>
       <div className="painel p-5">
-        <p className="mb-4 font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
+        <p className="mb-4 label-mono">
           Segunda barreira · sessão expira em 30 min sem uso
         </p>
         <AdminLoginForm />

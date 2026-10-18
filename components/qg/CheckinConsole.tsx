@@ -117,7 +117,7 @@ export function CheckinConsole({ meals, defaultMealId }: { meals: MealOption[]; 
   return (
     <div className="flex flex-col gap-4 text-base">
       <label className="flex flex-col gap-1">
-        <span className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Refeição</span>
+        <span className="label-mono">Refeição</span>
         <select
           value={mealId}
           onChange={(e) => setMealId(e.target.value)}
@@ -150,7 +150,7 @@ export function CheckinConsole({ meals, defaultMealId }: { meals: MealOption[]; 
       {mode === "camera" ? (
         <div className="flex flex-col gap-2">
           <div id="qr-reader" className="overflow-hidden rounded border border-nave-bezel bg-black" />
-          {cameraError && <p role="alert" className="text-nave-danger">⚠ {cameraError}</p>}
+          {cameraError && <p role="alert" className="text-nave-danger">Erro: {cameraError}</p>}
           {busy && <p className="font-mono text-sm text-nave-text-secondary">Registrando…</p>}
         </div>
       ) : (
@@ -162,25 +162,38 @@ export function CheckinConsole({ meals, defaultMealId }: { meals: MealOption[]; 
   );
 }
 
+function BigIcon({ kind }: { kind: "ok" | "no" | "warn" }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      {kind === "ok" && <path d="m7.5 12.5 3 3 6-6.5" />}
+      {kind === "no" && <path d="m8.5 8.5 7 7M15.5 8.5l-7 7" />}
+      {kind === "warn" && <path d="M12 7v6M12 16.5h.01" />}
+    </svg>
+  );
+}
+
 function ResultOverlay({ result, onClose, onUndo }: { result: Result; onClose: () => void; onUndo: (id: string) => void }) {
   const tone =
     result.status === "liberado" ? "bg-[#0f5a2c]" : result.status === "ja_consumiu" ? "bg-[#8f1219]" : "bg-[#5a3d0a]";
 
   return (
-    <div role="alertdialog" aria-modal="true" aria-labelledby="checkin-title" className={`fixed inset-0 z-[60] flex flex-col justify-between p-6 text-white ${tone}`}>
+    <div role="alertdialog" aria-modal="true" aria-labelledby="checkin-title" className={`fixed inset-0 z-[60] flex flex-col overflow-y-auto justify-between p-6 text-white ${tone}`}>
       <div className="flex flex-col gap-4">
         {result.status === "liberado" && (
           <>
-            <p id="checkin-title" className="text-5xl font-bold tracking-wide">✔ LIBERADO</p>
+            <BigIcon kind="ok" />
+            <p id="checkin-title" className="text-5xl font-bold tracking-wide">LIBERADO</p>
             <Who v={result.volunteer} />
             {result.outsideTeamWindow && (
-              <p className="rounded border-2 border-[#ffd27a] bg-black/30 p-3 text-lg">⚠ Fora do horário da equipe (não bloqueia)</p>
+              <p className="rounded border-2 border-[#ffd27a] bg-black/30 p-3 text-lg">Atenção: fora do horário da equipe (não bloqueia)</p>
             )}
           </>
         )}
         {result.status === "ja_consumiu" && (
           <>
-            <p id="checkin-title" className="text-4xl font-bold tracking-wide">✖ {result.justNow ? "JÁ REGISTRADO AGORA" : "JÁ CONSUMIU"}</p>
+            <BigIcon kind="no" />
+            <p id="checkin-title" className="text-4xl font-bold tracking-wide">{result.justNow ? "JÁ REGISTRADO AGORA" : "JÁ CONSUMIU"}</p>
             <Who v={result.volunteer} />
             <p className="text-xl">
               Esta refeição foi registrada às {hm(result.at)}
@@ -190,7 +203,8 @@ function ResultOverlay({ result, onClose, onUndo }: { result: Result; onClose: (
         )}
         {result.status === "erro" && (
           <>
-            <p id="checkin-title" className="text-4xl font-bold">⚠ NÃO REGISTRADO</p>
+            <BigIcon kind="warn" />
+            <p id="checkin-title" className="text-4xl font-bold">NÃO REGISTRADO</p>
             <p className="text-xl">{result.message}</p>
           </>
         )}
@@ -215,7 +229,7 @@ function Who({ v }: { v: { fullName: string; teamName: string | null; dietNotes:
       <p className="text-3xl font-semibold">{v.fullName}</p>
       <p className="text-xl opacity-90">{v.teamName ?? "Sem equipe"}</p>
       {v.dietNotes && (
-        <p className="rounded bg-white p-3 text-2xl font-bold text-black">🍽 Restrição: {v.dietNotes}</p>
+        <p className="rounded bg-white p-3 text-2xl font-bold text-black">Restrição: {v.dietNotes}</p>
       )}
     </div>
   );

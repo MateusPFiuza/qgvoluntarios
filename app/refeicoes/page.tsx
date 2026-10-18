@@ -22,7 +22,7 @@ export default async function RefeicoesPage() {
       </Link>
       {volunteer?.diet_notes && (
         <p className="painel p-4 text-sm">
-          🍽 Sua restrição alimentar cadastrada: <strong>{volunteer.diet_notes}</strong>
+          Sua restrição alimentar cadastrada: <strong>{volunteer.diet_notes}</strong>
           <span className="block text-xs text-nave-text-secondary">Só você e o QG veem esta informação.</span>
         </p>
       )}
@@ -37,13 +37,13 @@ export default async function RefeicoesPage() {
               <div className="flex items-start justify-between gap-2">
                 <p className="text-lg">{m.label}</p>
                 {c ? (
-                  <span className="shrink-0 rounded border border-nave-success px-2 text-sm text-nave-success">✔ Registrada {formatHM(c.created_at)}</span>
+                  <span className="shrink-0 rounded border border-nave-success px-2 text-sm text-nave-success">Registrada {formatHM(c.created_at)}</span>
                 ) : live ? (
-                  <span className="shrink-0 rounded border border-nave-gold px-2 text-sm text-nave-gold">● Servindo</span>
+                  <span className="shrink-0 rounded border border-nave-gold px-2 text-sm text-nave-gold">Servindo</span>
                 ) : past ? (
-                  <span className="shrink-0 text-sm text-nave-text-secondary">Encerrada</span>
+                  <span className="shrink-0 text-sm text-nave-text-secondary">Encerrada, não registrada</span>
                 ) : (
-                  <span className="shrink-0 text-sm text-nave-text-secondary">○ Não registrada</span>
+                  <span className="shrink-0 text-sm text-nave-text-secondary">Ainda não registrada</span>
                 )}
               </div>
               <p className="font-mono text-sm text-nave-text-secondary">

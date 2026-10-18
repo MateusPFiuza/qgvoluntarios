@@ -54,7 +54,7 @@ export async function POST(request: Request) {
   if (lockout.locked) {
     return NextResponse.json(
       {
-        error: "Muitas tentativas erradas. Acesso bloqueado temporariamente — procure o QG dos Voluntários.",
+        error: "Muitas tentativas erradas. Acesso bloqueado temporariamente, procure o QG dos Voluntários.",
         lockedUntil: lockout.until.toISOString(),
       },
       { status: 423 },
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
       await setVolunteerLock(volunteerId, updatedLockout.until);
       return NextResponse.json(
         {
-          error: "Muitas tentativas erradas. Acesso bloqueado temporariamente — procure o QG dos Voluntários.",
+          error: "Muitas tentativas erradas. Acesso bloqueado temporariamente, procure o QG dos Voluntários.",
           lockedUntil: updatedLockout.until.toISOString(),
         },
         { status: 423 },

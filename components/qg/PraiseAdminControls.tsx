@@ -33,7 +33,7 @@ export function WindowControl({ open }: { open: { id: string; name: string } | n
     <div className="flex flex-col gap-3">
       {open ? (
         <div className="flex items-center justify-between gap-2">
-          <p className="text-nave-success">● Aberta: {open.name}</p>
+          <p className="text-nave-success">Aberta: {open.name}</p>
           <button
             onClick={() => window.confirm(`Fechar a janela "${open.name}"?`) && run(() => post("/api/qg/praise/window", { action: "close", windowId: open.id }))}
             className="tap-target rounded border border-nave-danger px-3 font-mono text-xs uppercase text-nave-danger"
@@ -42,7 +42,7 @@ export function WindowControl({ open }: { open: { id: string; name: string } | n
           </button>
         </div>
       ) : (
-        <p className="text-nave-text-secondary">⏸ Nenhuma janela aberta. Voluntários veem &quot;janela fechada&quot;.</p>
+        <p className="text-nave-text-secondary">Nenhuma janela aberta. Voluntários veem &quot;janela fechada&quot;.</p>
       )}
       <form
         className="flex gap-2"
@@ -55,7 +55,7 @@ export function WindowControl({ open }: { open: { id: string; name: string } | n
         <button className="tap-target rounded bg-nave-gold px-3 font-mono text-xs uppercase text-nave-bg">Abrir</button>
       </form>
       {open && <p className="text-xs text-nave-text-secondary">Abrir uma nova janela fecha a atual.</p>}
-      {error && <p role="alert" className="text-nave-danger">⚠ {error}</p>}
+      {error && <p role="alert" className="text-nave-danger">{error}</p>}
     </div>
   );
 }
@@ -86,7 +86,7 @@ export function AwardPinForm() {
       <button disabled={!who} onClick={() => who && run(() => post("/api/qg/pins", { action: "award", volunteerId: who.id, trait })).then(() => setWho(null))} className="tap-target rounded bg-nave-gold font-mono text-sm uppercase text-nave-bg disabled:opacity-40">
         Conceder pin
       </button>
-      {error && <p role="alert" className="text-nave-danger">⚠ {error}</p>}
+      {error && <p role="alert" className="text-nave-danger">{error}</p>}
     </div>
   );
 }
@@ -101,11 +101,11 @@ export function PinAwardActions({ id, delivered }: { id: string; delivered: bool
         </button>
         {!delivered && (
           <button onClick={() => window.confirm("Remover esta concessão?") && run(() => post("/api/qg/pins", { action: "remove", awardId: id }))} className="tap-target rounded border border-nave-danger px-2 text-xs uppercase text-nave-danger">
-            ✖
+            Remover
           </button>
         )}
       </div>
-      {error && <p className="text-xs text-nave-danger">⚠ {error}</p>}
+      {error && <p className="text-xs text-nave-danger">{error}</p>}
     </div>
   );
 }

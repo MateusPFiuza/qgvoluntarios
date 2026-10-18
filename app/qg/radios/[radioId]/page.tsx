@@ -6,14 +6,14 @@ import { QgShell } from "@/components/AppShell";
 export const dynamic = "force-dynamic";
 
 const fmt = (iso: string | null) =>
-  iso ? new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", weekday: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(iso)) : "—";
+  iso ? new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", weekday: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" }).format(new Date(iso)) : "-";
 
 export default async function RadioHistoryPage({ params }: { params: { radioId: string } }) {
   await requireAdminPage("radios");
   const [radios, history, volunteers] = await Promise.all([listRadios(), listRadioCheckouts({ radioId: params.radioId }), listActiveVolunteersWithDiet()]);
   const radio = radios.find((r) => r.id === params.radioId);
   if (!radio) notFound();
-  const name = (id: string | null) => (id ? volunteers.find((v) => v.id === id)?.full_name ?? "?" : "—");
+  const name = (id: string | null) => (id ? volunteers.find((v) => v.id === id)?.full_name ?? "?" : "-");
 
   return (
     <QgShell title={`Rádio ${radio.number}`} back="/qg/radios">

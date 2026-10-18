@@ -69,7 +69,7 @@ export default async function CronogramaPage({ searchParams }: { searchParams: {
           {dayItems[0]?.is_mock && <span className="selo-exemplo self-start">cronograma de exemplo</span>}
           {sessions.map((s) => (
             <section key={s} className="painel p-4">
-              <h2 className="mb-2 font-mono text-xs uppercase tracking-wide text-nave-text-secondary">{s}</h2>
+              <h2 className="mb-2 label-mono">{s}</h2>
               <ol className="flex flex-col gap-1">
                 {dayItems
                   .filter((i) => i.session_label === s)
@@ -83,7 +83,7 @@ export default async function CronogramaPage({ searchParams }: { searchParams: {
                         <span className="min-w-0">
                           <span className="block">
                             {i.title}
-                            {live && <strong className="ml-2 font-mono text-xs text-nave-gold">● AGORA</strong>}
+                            {live && <strong className="ml-2 font-mono text-xs text-nave-gold">AGORA</strong>}
                           </span>
                           <span className="text-xs text-nave-text-secondary">
                             {KIND_LABEL[i.kind] ?? i.kind}
@@ -113,7 +113,7 @@ export default async function CronogramaPage({ searchParams }: { searchParams: {
                   <span>
                     <span className="block">
                       {r.activity}
-                      {live && <strong className="ml-2 font-mono text-xs text-nave-gold">● AGORA</strong>}
+                      {live && <strong className="ml-2 font-mono text-xs text-nave-gold">AGORA</strong>}
                     </span>
                     <span className="text-xs text-nave-text-secondary">{locName(r.location_id)}</span>
                   </span>

@@ -48,7 +48,7 @@ export function PersonalQr() {
       </div>
       {error && (
         <p role="alert" className="text-center text-base text-nave-danger">
-          ⚠ {error}
+          {error}
         </p>
       )}
       <p className="text-center text-sm text-nave-text-secondary">

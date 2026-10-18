@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { getVolunteerSession } from "@/lib/server/session";
 import { isDemoMode } from "@/lib/server/env";
 import { VolunteerLoginForm } from "@/components/VolunteerLoginForm";
-import { SimpleModeToggle } from "@/components/ship-fx/SimpleModeToggle";
 import demoLogins from "@/supabase/seed/demo/logins-de-teste.json";
 
 export default async function EntrarPage() {
@@ -12,31 +11,27 @@ export default async function EntrarPage() {
   const demoMode = isDemoMode();
 
   return (
-    <div className="flex min-h-screen flex-col gap-6 px-4 py-8">
-      <header className="flex items-center justify-between">
-        <h1 className="font-display text-lg uppercase tracking-wide text-nave-gold fx-glow-text">
-          G&apos;26 Voluntários
-        </h1>
-        <SimpleModeToggle />
+    <div className="flex min-h-screen flex-col gap-8 px-5 py-12">
+      <header>
+        <p className="label-mono">Geração Atômika 2026</p>
+        <h1 className="mt-1 font-display text-3xl font-semibold text-nave-text">G&apos;26 Voluntários</h1>
+        <p className="mt-2 text-nave-text-secondary">Entre para ver sua escala, refeições e o QR pessoal.</p>
       </header>
 
       <div className="painel p-5">
-        <p className="mb-4 font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
-          Terminal de acesso · Geração Atômika 2026
-        </p>
         <VolunteerLoginForm />
       </div>
 
       {demoMode && (
-        <div className="painel p-4 text-xs text-nave-text-secondary">
-          <p className="mb-2 font-semibold text-nave-gold">
+        <div className="rounded-xl border border-nave-bezel p-4 text-sm text-nave-text-secondary">
+          <p className="mb-2 font-semibold text-nave-text">
             Modo demonstração <span className="selo-exemplo">exemplo</span>
           </p>
           <p className="mb-2">Dados fictícios. Use um destes logins de teste:</p>
-          <ul className="space-y-1 font-mono">
+          <ul className="space-y-1">
             {demoLogins.map((l) => (
               <li key={l.name}>
-                {l.name} — CPF {l.cpfLast4}, nasc. {l.birthDDMM} ({l.team}, {l.role})
+                {l.name}: CPF {l.cpfLast4}, nasc. {l.birthDDMM} ({l.team}, {l.role})
               </li>
             ))}
           </ul>

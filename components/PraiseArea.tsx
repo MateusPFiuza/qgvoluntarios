@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TRAIT_INFO, TRAITS, type Trait } from "@/lib/rules/praise";
 import { VolunteerPicker } from "./VolunteerPicker";
 import { ExplainerModal } from "./ExplainerModal";
+import { TraitIcon } from "./TraitIcon";
 
 type Person = { id: string; name: string; team: string | null; traits: Trait[] };
 
@@ -45,16 +46,16 @@ export function PraiseArea({
     <div className="flex flex-col gap-4">
       {showVideo && <ExplainerModal videoUrl={videoUrl} onClose={() => setShowVideo(false)} />}
 
-      <p className="painel p-4 text-sm">
-        🔒 Elogio anônimo: <strong>ninguém da organização vê quem elogiou pelo app.</strong>
+      <p className="rounded-xl border border-nave-bezel p-4 text-sm">
+        Elogio anônimo: <strong>ninguém da organização vê quem elogiou pelo app.</strong>
       </p>
 
       {!windowOpen ? (
-        <p className="painel border-nave-warn p-4 text-lg">⏸ Janela fechada. O QG avisa quando abrir a próxima.</p>
+        <p className="painel border-nave-warn p-4 text-lg">Janela fechada. O QG avisa quando abrir a próxima.</p>
       ) : (
         <>
-          <p className="font-mono text-sm uppercase text-nave-success">● Janela aberta: {windowName}</p>
-          {error && <p role="alert" className="rounded border-2 border-nave-danger p-3 text-nave-danger">⚠ {error}</p>}
+          <p className="text-sm font-medium text-nave-success">Janela aberta: {windowName}</p>
+          {error && <p role="alert" className="rounded border-2 border-nave-danger p-3 text-nave-danger">Erro: {error}</p>}
           <VolunteerPicker
             label="Quem você quer elogiar?"
             onPick={(v) => {
@@ -76,13 +77,13 @@ export function PraiseArea({
                         key={t}
                         aria-pressed={on}
                         onClick={() => toggle(p.id, t)}
-                        className={`flex min-h-[72px] flex-col items-center justify-center gap-1 rounded border-2 text-sm ${
-                          on ? "border-nave-gold bg-nave-gold text-nave-bg shadow-glow-gold" : "border-nave-gold-dim text-nave-text-secondary"
+                        className={`flex min-h-[72px] flex-col items-center justify-center gap-1 rounded-xl border-2 text-sm ${
+                          on ? "border-nave-gold bg-nave-gold text-nave-bg" : "border-nave-gold-dim text-nave-text-secondary"
                         }`}
                       >
-                        <span aria-hidden="true" className="text-2xl leading-none">{TRAIT_INFO[t].icon}</span>
+                        <TraitIcon trait={t} />
                         <span>{TRAIT_INFO[t].label}</span>
-                        <span className="text-[10px] uppercase">{on ? "✔ aceso" : "apagado"}</span>
+                        <span className="text-xs">{on ? "Aceso" : "Apagado"}</span>
                       </button>
                     );
                   })}

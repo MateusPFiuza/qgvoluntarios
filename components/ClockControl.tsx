@@ -33,28 +33,32 @@ export function ClockControl({ current, simulated }: { current: string; simulate
   };
 
   return (
-    <details className="painel p-4">
-      <summary className="tap-target flex cursor-pointer items-center font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
-        ⏱ Relógio {simulated ? "simulado" : "real"}: {current}
+    <details className="rounded-xl border border-nave-gold/40 bg-nave-gold/5 px-4 py-1">
+      <summary className="tap-target flex cursor-pointer list-none items-center justify-between gap-3">
+        <span className="whitespace-nowrap font-semibold text-nave-gold">Viajar no tempo</span>
+        <span className="text-sm text-nave-text-secondary">
+          {current}
+          {simulated ? " (simulado)" : ""}
+        </span>
       </summary>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-2 flex flex-wrap gap-2">
         {PRESETS.map(([label, value]) => (
-          <button key={label} onClick={() => apply(value)} className="tap-target rounded border border-nave-gold-dim px-3 text-sm">
+          <button key={label} onClick={() => apply(value)} className="tap-target rounded-lg border border-nave-bezel px-3 text-sm hover:border-nave-gold">
             {label}
           </button>
         ))}
       </div>
       <form
-        className="mt-3 flex gap-2"
+        className="mb-3 mt-3 flex gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           if (custom) apply(`${custom}:00-03:00`);
         }}
       >
-        <input type="datetime-local" value={custom} onChange={(e) => setCustom(e.target.value)} aria-label="Data e hora (Brasília)" className="tap-target flex-1 rounded border border-nave-gold-dim bg-nave-bg px-2 text-nave-text" />
-        <button className="tap-target rounded bg-nave-gold px-3 font-mono text-sm uppercase text-nave-bg">Ir</button>
+        <input type="datetime-local" value={custom} onChange={(e) => setCustom(e.target.value)} aria-label="Data e hora (Brasília)" className="campo flex-1" />
+        <button className="tap-target rounded-lg bg-nave-gold px-4 text-sm font-semibold text-nave-bg">Ir</button>
       </form>
-      {error && <p role="alert" className="mt-2 text-nave-danger">⚠ {error}</p>}
+      {error && <p role="alert" className="mt-2 text-nave-danger">Erro: {error}</p>}
     </details>
   );
 }

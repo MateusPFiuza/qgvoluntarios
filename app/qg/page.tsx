@@ -19,9 +19,9 @@ export default async function QgPage() {
   return (
     <div className="flex min-h-screen flex-col gap-4 px-4 py-6">
       <header className="flex items-center justify-between">
-        <h1 className="font-display text-lg uppercase tracking-wide text-nave-orange fx-glow-text">Área do QG</h1>
+        <h1 className="font-display text-2xl font-semibold text-nave-text">Área do QG</h1>
         <div className="flex gap-2">
-          <Link href="/" className="tap-target flex items-center rounded border border-nave-gold-dim px-3 font-mono text-xs uppercase text-nave-text-secondary">
+          <Link href="/" className="tap-target flex items-center rounded border border-nave-gold-dim px-3 label-mono">
             App
           </Link>
           <LogoutButton />
@@ -29,7 +29,7 @@ export default async function QgPage() {
       </header>
 
       <div className="painel p-4">
-        <p className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
+        <p className="label-mono">
           {isAdm ? "ADM conectado" : "Gestor de rádios conectado"} · sessão expira em {config.adminIdleMinutes} min sem uso
         </p>
         <p className="mt-1 text-xl text-nave-text">{admin.name}</p>

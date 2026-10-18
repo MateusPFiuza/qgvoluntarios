@@ -28,10 +28,10 @@ export function MapView({ points, isMock }: { points: MapPoint[]; isMock: boolea
       <div className="flex items-center justify-between">
         {isMock && <span className="selo-exemplo">mapa ilustrativo</span>}
         <div className="flex gap-2">
-          <button aria-label="Diminuir zoom" onClick={() => setZoom((z) => Math.max(1, z - 0.5))} className="tap-target rounded border border-nave-gold-dim px-3 text-lg">
+          <button aria-label="Diminuir zoom" onClick={() => setZoom((z) => Math.max(1, z - 0.5))} className="tap-target rounded-lg border border-nave-bezel px-3 text-lg">
             −
           </button>
-          <button aria-label="Aumentar zoom" onClick={() => setZoom((z) => Math.min(3, z + 0.5))} className="tap-target rounded border border-nave-gold-dim px-3 text-lg">
+          <button aria-label="Aumentar zoom" onClick={() => setZoom((z) => Math.min(3, z + 0.5))} className="tap-target rounded-lg border border-nave-bezel px-3 text-lg">
             +
           </button>
         </div>
@@ -50,10 +50,13 @@ export function MapView({ points, isMock }: { points: MapPoint[]; isMock: boolea
           {points.map((p) => (
             <button
               key={p.id}
-              onClick={() => setSelected(p)}
+              onClick={() => {
+                setSelected(p);
+                requestAnimationFrame(() => document.getElementById("detalhe-ponto")?.scrollIntoView({ behavior: "smooth", block: "center" }));
+              }}
               aria-label={p.name}
               aria-pressed={selected?.id === p.id}
-              className={`absolute flex min-h-[48px] min-w-[48px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded border font-mono text-xs ${
+              className={`absolute flex min-h-[48px] min-w-[48px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-0.5 rounded-lg border py-1 text-xs ${
                 selected?.id === p.id ? "border-nave-orange bg-nave-orange text-nave-bg" : "border-nave-gold bg-nave-panel text-nave-gold"
               }`}
               style={{ left: `${p.x}%`, top: `${p.y}%` }}
@@ -61,12 +64,12 @@ export function MapView({ points, isMock }: { points: MapPoint[]; isMock: boolea
               <span aria-hidden="true" className="text-sm leading-none">
                 {ICON[p.kind] ?? "•"}
               </span>
-              <span className="max-w-[72px] truncate px-1 text-[10px] leading-tight">{p.name}</span>
+              <span className="max-w-[84px] whitespace-normal break-words px-1 text-center text-xs leading-tight">{p.name}</span>
             </button>
           ))}
         </div>
       </div>
-      <div className="painel min-h-[96px] p-4" aria-live="polite">
+      <div className="painel min-h-[96px] p-4 scroll-mb-28" aria-live="polite" id="detalhe-ponto">
         {selected ? (
           <>
             <p className="text-lg">{selected.name}</p>

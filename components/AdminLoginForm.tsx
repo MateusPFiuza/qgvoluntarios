@@ -36,7 +36,7 @@ export function AdminLoginForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label htmlFor="senha-adm" className="block font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
+        <label htmlFor="senha-adm" className="block label-mono">
           Senha de ADM (individual)
         </label>
         <input

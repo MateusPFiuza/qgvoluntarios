@@ -77,7 +77,7 @@ export function VolunteerLoginForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label htmlFor="nome" className="block font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
+        <label htmlFor="nome" className="block label-mono">
           Seu nome
         </label>
         <input
@@ -111,7 +111,7 @@ export function VolunteerLoginForm() {
                   className="tap-target flex w-full flex-col items-start gap-0.5 px-3 py-2 text-left hover:bg-nave-bezel"
                 >
                   <span className="text-sm text-nave-text">
-                    {r.fullName} {r.isLeader && <span className="text-nave-gold">★ líder</span>}
+                    {r.fullName} {r.isLeader && <span className="text-nave-gold">líder</span>}
                   </span>
                   <span className="flex items-center gap-2 text-xs text-nave-text-secondary">
                     {r.teamName ?? "Sem equipe"}
@@ -127,7 +127,7 @@ export function VolunteerLoginForm() {
       {selected && (
         <>
           <div>
-            <label htmlFor="cpf" className="block font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
+            <label htmlFor="cpf" className="block label-mono">
               4 últimos dígitos do CPF
             </label>
             <input
@@ -141,7 +141,7 @@ export function VolunteerLoginForm() {
             />
           </div>
           <div>
-            <label htmlFor="nasc" className="block font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
+            <label htmlFor="nasc" className="block label-mono">
               Nascimento (DDMM)
             </label>
             <input

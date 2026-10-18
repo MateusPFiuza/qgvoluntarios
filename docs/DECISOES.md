@@ -263,3 +263,15 @@ provisórios em `components/PinIcon.tsx`. Estoque por pin:
 mostra o aviso. Texto provisório marcado como exemplo em
 `app/privacidade/page.tsx`. Na demonstração sem Supabase, o aceite fica em
 memória.
+
+## 32. Visual mais limpo, sem faixa de demonstração e sem Modo simples (decisão do autor)
+
+A pedido do autor do projeto, isto sobrepõe a seção 3 e a seção 11 da especificação:
+- Removidos scanlines, vinheta e brilho de texto. Fica só um campo de estrelas muito discreto, desligado nas telas operacionais e com `prefers-reduced-motion`. A abertura dura 1,5 s.
+- Removida a faixa fixa "DEMONSTRAÇÃO, dados fictícios". Os selos "EXEMPLO" continuam onde há conteúdo de exemplo.
+- Removido o "Modo simples", porque na prática quase não mudava nada. `prefers-reduced-motion` continua desligando as animações.
+- Texto corrido em fonte sans do sistema. A fonte mono fica só nos rótulos e horários.
+
+## 33. Lista completa de voluntários nos campos de escolha (decisão do autor)
+
+Fora do login, todo campo de escolher voluntário mostra a lista completa, filtrada enquanto a pessoa digita: busca, check-in por nome, rádios, elogios e pins. A lista vem de `/api/volunteers/directory`, que exige sessão e devolve só nome, equipe e líder. O login continua exigindo 3 letras (seção 5.2), porque ali ainda não há sessão. A equipe aparece em destaque em cada item, por causa dos homônimos.

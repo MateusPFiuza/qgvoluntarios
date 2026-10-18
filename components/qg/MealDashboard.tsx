@@ -48,7 +48,7 @@ export function MealDashboard() {
     };
   }, [mealId]);
 
-  if (!data) return <p className="text-nave-text-secondary">{error ? `⚠ ${error}` : "Carregando…"}</p>;
+  if (!data) return <p className="text-nave-text-secondary">{error ? `${error}` : "Carregando…"}</p>;
   const d = data.dashboard;
   const notEaten = teamFilter ? d.notEaten.filter((n) => n.teamId === teamFilter) : d.notEaten;
 
@@ -67,7 +67,7 @@ export function MealDashboard() {
         ))}
       </select>
 
-      {error && <p role="alert" className="text-nave-danger">⚠ {error} (mostrando os últimos dados)</p>}
+      {error && <p role="alert" className="text-nave-danger">{error} (mostrando os últimos dados)</p>}
 
       <div className="grid grid-cols-3 gap-2 text-center">
         <Stat label="Consumidas" value={d.consumed} />
@@ -76,7 +76,7 @@ export function MealDashboard() {
       </div>
 
       <section className="painel p-4">
-        <h2 className="mb-3 font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Por equipe</h2>
+        <h2 className="mb-3 label-mono">Por equipe</h2>
         <ul className="flex flex-col gap-2">
           {d.byTeam.map((t) => (
             <li key={t.teamId}>
@@ -96,7 +96,7 @@ export function MealDashboard() {
 
       <section className="painel p-4">
         <div className="mb-3 flex items-center justify-between gap-2">
-          <h2 className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Ainda não comeu ({notEaten.length})</h2>
+          <h2 className="label-mono">Ainda não comeu ({notEaten.length})</h2>
           <select
             value={teamFilter}
             onChange={(e) => setTeamFilter(e.target.value)}
@@ -115,14 +115,14 @@ export function MealDashboard() {
           {notEaten.map((n) => (
             <li key={n.id} className="py-2 text-sm">
               {n.fullName} <span className="text-nave-text-secondary">· {n.teamName ?? "sem equipe"}</span>
-              {n.dietNotes && <span className="ml-2 rounded border border-nave-orange px-1 text-xs text-nave-orange">🍽 {n.dietNotes}</span>}
+              {n.dietNotes && <span className="ml-2 rounded border border-nave-orange px-1 text-xs text-nave-orange">{n.dietNotes}</span>}
             </li>
           ))}
         </ul>
       </section>
 
       <section className="painel p-4">
-        <h2 className="mb-2 font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Totais por dia</h2>
+        <h2 className="mb-2 label-mono">Totais por dia</h2>
         <ul className="grid grid-cols-3 gap-2 text-center text-sm">
           {data.dayTotals.map((t) => (
             <li key={t.label}>

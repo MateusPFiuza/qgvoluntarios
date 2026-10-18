@@ -60,19 +60,30 @@ export default async function HomePage() {
   const showClock = isDemoMode() || Boolean(adminSession);
 
   return (
-    <AppShell title="Painel de missão" active="inicio">
-      <div className="painel p-5">
-        <p className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Tripulante</p>
-        <p className="mt-1 text-xl text-nave-text fx-glow-text">{session.name}</p>
+    <AppShell
+      title="Painel de missão"
+      active="inicio"
+      right={
+        adminAccount ? (
+          <Link href="/qg" className="tap-target flex items-center rounded-lg border border-nave-orange px-3 text-sm font-medium text-nave-orange">
+            Área do QG
+          </Link>
+        ) : undefined
+      }
+    >
+      {showClock && <ClockControl current={`${weekdayName(now)} ${formatHM(now)}`} simulated={simulated} />}
+
+      <div>
+        <p className="text-xl font-semibold text-nave-text">Olá, {session.name.split(" ")[0]}</p>
         <p className="text-sm text-nave-text-secondary">
           {team?.name ?? "Sem equipe"}
-          {session.isLeader && <span className="ml-2 rounded border border-nave-gold px-1 text-nave-gold">★ Líder</span>}
+          {session.isLeader && <span className="ml-2 rounded bg-nave-gold/15 px-2 py-0.5 text-xs text-nave-gold">Líder</span>}
         </p>
       </div>
 
       <section className="painel p-5" aria-labelledby="agora">
-        <h2 id="agora" className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">
-          <span className="mr-1 inline-block h-2 w-2 rounded-full bg-nave-success" aria-hidden="true" /> Agora no evento
+        <h2 id="agora" className="label-mono">
+          Agora no evento
         </h2>
         {phase === "antes" && (
           <p className="mt-2 text-lg">
@@ -80,11 +91,11 @@ export default async function HomePage() {
             <span className="block text-sm text-nave-text-secondary">Sexta, 11 de dezembro, abertura dos portões às {formatHM(config.eventStart)}</span>
           </p>
         )}
-        {phase === "depois" && <p className="mt-2 text-lg">Missão cumprida! Obrigado por servir no Geração Atômika 2026.</p>}
+        {phase === "depois" && <p className="mt-2 text-lg">Missão cumprida. Obrigado por servir no Geração Atômika 2026.</p>}
         {phase === "durante" && (
           <div className="mt-2 flex flex-col gap-1">
             {current ? (
-              <p className="text-lg fx-cursor">
+              <p className="text-lg">
                 {weekdayName(now)}, {current.session_label}: {current.title}
               </p>
             ) : (
@@ -101,7 +112,7 @@ export default async function HomePage() {
       </section>
 
       <section className="painel p-5" aria-labelledby="minha-equipe">
-        <h2 id="minha-equipe" className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Onde sua equipe deve estar</h2>
+        <h2 id="minha-equipe" className="label-mono">Onde sua equipe deve estar</h2>
         {!teamHasSchedule ? (
           <p className="mt-2">Escala da sua equipe ainda não publicada.</p>
         ) : slot ? (
@@ -119,8 +130,8 @@ export default async function HomePage() {
 
       {config.mealsEnabled() && (
         <section className="painel p-5" aria-labelledby="refeicao">
-          <h2 id="refeicao" className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Sua próxima refeição</h2>
-          {currentMeal && currentMealDone && <p className="mt-2 text-nave-success">✔ {currentMeal.label}: refeição registrada</p>}
+          <h2 id="refeicao" className="label-mono">Sua próxima refeição</h2>
+          {currentMeal && currentMealDone && <p className="mt-2 text-nave-success">{currentMeal.label}: refeição registrada</p>}
           {nextMeal ? (
             <div className="mt-2">
               <p className="text-lg">
@@ -140,7 +151,7 @@ export default async function HomePage() {
                   {nextMealWindow.is_mock && <span className="selo-exemplo ml-2">exemplo</span>}
                 </p>
               )}
-              <Link href="/minha-identificacao" className="tap-target mt-3 flex items-center justify-center rounded border border-nave-gold font-mono text-sm uppercase text-nave-gold">
+              <Link href="/minha-identificacao" className="tap-target mt-4 flex items-center justify-center rounded-lg bg-nave-gold text-sm font-semibold text-nave-bg">
                 Mostrar meu QR
               </Link>
             </div>
@@ -157,20 +168,13 @@ export default async function HomePage() {
         <Shortcut href="/mapa" label="Mapa" />
       </nav>
 
-      {adminAccount && (
-        <Link href="/qg" className="tap-target flex items-center justify-center rounded border border-nave-orange font-mono text-sm uppercase tracking-wide text-nave-orange">
-          Área do QG
-        </Link>
-      )}
-
-      {showClock && <ClockControl current={`${weekdayName(now)} ${formatHM(now)}`} simulated={simulated} />}
     </AppShell>
   );
 }
 
 function Shortcut({ href, label }: { href: string; label: string }) {
   return (
-    <Link href={href} className="painel tap-target flex items-center justify-center p-4 text-center font-mono text-sm uppercase tracking-wide text-nave-text hover:border-nave-gold">
+    <Link href={href} className="tap-target flex items-center justify-center rounded-xl border border-nave-bezel p-4 text-center text-sm text-nave-text hover:border-nave-gold">
       {label}
     </Link>
   );

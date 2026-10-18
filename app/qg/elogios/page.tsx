@@ -27,12 +27,12 @@ export default async function QgElogiosPage({ searchParams }: { searchParams: { 
   return (
     <QgShell title="Elogios e pins">
       <section className="painel p-4">
-        <h2 className="mb-3 font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Janela de elogios</h2>
+        <h2 className="mb-3 label-mono">Janela de elogios</h2>
         <WindowControl open={open ? { id: open.id, name: open.name } : null} />
       </section>
 
       <section className="painel flex flex-col gap-3 p-4">
-        <h2 className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Ranking (só totais, nunca quem enviou)</h2>
+        <h2 className="label-mono">Ranking (só totais, nunca quem enviou)</h2>
         <form className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           <select name="janela" defaultValue={windowId ?? ""} aria-label="Janela" className="tap-target rounded border border-nave-gold-dim bg-nave-bg px-2 text-nave-text">
             <option value="">Todas as janelas</option>
@@ -63,26 +63,32 @@ export default async function QgElogiosPage({ searchParams }: { searchParams: { 
         </form>
         {reciprocal !== null && windowTotal > 0 && (
           <p className="text-sm text-nave-text-secondary">
-            ℹ Pares que se elogiaram mutuamente nesta janela: <strong>{reciprocal}</strong> (de {windowTotal} elogios). Só informativo.
+            Pares que se elogiaram mutuamente nesta janela: <strong>{reciprocal}</strong> (de {windowTotal} elogios). Só informativo.
           </p>
         )}
+        <div className="grid grid-cols-[1fr_repeat(3,3.5rem)] gap-x-2 border-b border-nave-bezel pb-2 text-xs text-nave-text-secondary">
+          <span>Voluntário</span>
+          {TRAITS.map((t) => (
+            <span key={t} className={`text-center ${trait === t ? "text-nave-gold" : ""}`}>
+              {TRAIT_INFO[t].label}
+            </span>
+          ))}
+        </div>
         <ol className="flex flex-col divide-y divide-nave-bezel">
           {rows.map((r, i) => {
             const v = vol.get(r.receiverId);
             return (
-              <li key={r.receiverId} className="flex items-center justify-between gap-2 py-2 text-sm">
+              <li key={r.receiverId} className="grid grid-cols-[1fr_repeat(3,3.5rem)] items-center gap-x-2 py-2 text-sm">
                 <span className="min-w-0">
-                  <span className="mr-2 font-mono text-nave-text-secondary">{i + 1}.</span>
-                  {v?.full_name ?? "?"} <span className="text-nave-text-secondary">· {teamName(v?.team_id ?? null)}</span>
+                  <span className="mr-2 text-nave-text-secondary">{i + 1}.</span>
+                  {v?.full_name ?? "?"}
+                  <span className="block text-xs text-nave-text-secondary">{teamName(v?.team_id ?? null)}</span>
                 </span>
-                <span className="shrink-0 font-mono">
-                  {TRAITS.map((t) => (
-                    <span key={t} className={`ml-2 ${trait === t ? "text-nave-gold" : ""}`} title={TRAIT_INFO[t].label}>
-                      {TRAIT_INFO[t].icon}
-                      {r.byTrait[t]}
-                    </span>
-                  ))}
-                </span>
+                {TRAITS.map((t) => (
+                  <span key={t} className={`text-center font-mono text-base ${trait === t ? "text-nave-gold" : ""}`} aria-label={`${TRAIT_INFO[t].label}: ${r.byTrait[t]}`}>
+                    {r.byTrait[t]}
+                  </span>
+                ))}
               </li>
             );
           })}
@@ -91,7 +97,7 @@ export default async function QgElogiosPage({ searchParams }: { searchParams: { 
       </section>
 
       <section className="painel flex flex-col gap-3 p-4">
-        <h2 className="font-mono text-xs uppercase tracking-wide text-nave-text-secondary">Pins</h2>
+        <h2 className="label-mono">Pins</h2>
         <span className="selo-exemplo self-start">correspondência pin e característica provisória, sujeita a confirmação</span>
         <ul className="grid grid-cols-3 gap-2 text-center text-xs">
           {TRAITS.map((t) => {
@@ -121,7 +127,7 @@ export default async function QgElogiosPage({ searchParams }: { searchParams: { 
                   <span className="min-w-0">
                     {v?.full_name ?? "?"} <span className="text-nave-text-secondary">· {TRAIT_INFO[a.trait].label}</span>
                     <span className="block text-xs text-nave-text-secondary">
-                      {a.delivered_at ? `✔ Entregue ${weekdayName(a.delivered_at)} ${formatHM(a.delivered_at)}` : "○ Ainda não entregue"}
+                      {a.delivered_at ? `Entregue ${weekdayName(a.delivered_at)} ${formatHM(a.delivered_at)}` : "Ainda não entregue"}
                     </span>
                   </span>
                 </span>

@@ -17,7 +17,7 @@ export default async function MinhaIdentificacaoPage() {
           <p className="text-xl text-nave-text">{session.name}</p>
           <p className="font-mono text-sm uppercase text-nave-text-secondary">
             {team?.name ?? "Sem equipe"}
-            {session.isLeader ? " · ★ Líder" : ""}
+            {session.isLeader ? " · Líder" : ""}
           </p>
         </div>
         <PersonalQr />

@@ -1,18 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSimpleMode } from "./SimpleModeProvider";
 
 const SESSION_KEY = "qg26:boot-visto";
-const MAX_DURATION_MS = 3000;
+const MAX_DURATION_MS = 1500;
 
 /**
- * Animação de abertura ("iniciando sistema"): no máximo uma vez por
- * sessão, dura no máximo 3s, tem botão de pular (seção 3). Não roda em
- * Modo Simples / prefers-reduced-motion — nesses casos é pulada direto.
+ * Abertura curta ("iniciando sistema"), uma vez por sessão, com botão de pular.
+ * Não roda com prefers-reduced-motion.
  */
 export function BootSequence() {
-  const { simpleMode } = useSimpleMode();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -25,7 +22,7 @@ export function BootSequence() {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (alreadySeen || simpleMode || reducedMotion) {
+    if (alreadySeen || reducedMotion) {
       return;
     }
 
@@ -52,7 +49,7 @@ export function BootSequence() {
       aria-live="polite"
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-nave-bg font-mono text-nave-gold"
     >
-      <p className="text-sm tracking-[0.3em] fx-cursor">INICIANDO SISTEMA</p>
+      <p className="text-sm tracking-[0.3em]">INICIANDO SISTEMA</p>
       <p className="text-xs text-nave-text-secondary">QG DOS VOLUNTÁRIOS · G&apos;26</p>
       <button
         type="button"
