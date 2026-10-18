@@ -10,7 +10,8 @@ function required(name: string): string {
 }
 
 export function isDemoMode(): boolean {
-  return process.env.DEMO_MODE === "true";
+  // Sem Supabase, os dados são a semente fictícia: sempre rotular como demonstração.
+  return process.env.DEMO_MODE === "true" || getSupabaseConfig() === null;
 }
 
 export function getSupabaseConfig() {
