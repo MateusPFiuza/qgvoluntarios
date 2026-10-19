@@ -4,6 +4,8 @@ import { getNow } from "@/lib/server/clock";
 import { getVolunteerById, listEventDays, listLocations, listScheduleItems, listTeamSchedule } from "@/lib/server/repo";
 import { dayKey, formatHM, isWithin } from "@/lib/rules/time";
 import { AppShell } from "@/components/AppShell";
+import { groupScheduleBlocks } from "@/lib/rules/cronograma";
+import { config } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +32,7 @@ export default async function CronogramaPage({ searchParams }: { searchParams: {
   const day = days.find((d) => d.date === searchParams.dia) ?? days.find((d) => d.date === todayKey) ?? days[0];
   const aba = searchParams.aba === "equipe" ? "equipe" : "geral";
   const dayItems = items.filter((i) => dayKey(i.starts_at) === day?.date);
-  const sessions = [...new Set(dayItems.map((i) => i.session_label))];
+  const blocks = groupScheduleBlocks(dayItems);
   const dayTeamRows = teamRows.filter((r) => dayKey(r.starts_at) === day?.date);
   const locName = (id: string | null) => locations.find((l) => l.id === id)?.name ?? "Local a definir";
   const href = (dia: string, a: string) => `/cronograma?dia=${dia}&aba=${a}`;
@@ -66,14 +68,12 @@ export default async function CronogramaPage({ searchParams }: { searchParams: {
 
       {aba === "geral" ? (
         <>
-          {dayItems[0]?.is_mock && <span className="selo-exemplo self-start">cronograma de exemplo</span>}
-          {sessions.map((s) => (
-            <section key={s} className="painel p-4">
-              <h2 className="mb-2 label-mono">{s}</h2>
+          {dayItems[0] && <span className="selo-exemplo self-start">{dayItems[0].is_mock ? "cronograma de exemplo" : config.scheduleVersionLabel}</span>}
+          {blocks.map((b) => (
+            <section key={`${b.label}-${b.items[0].starts_at}`} className="painel p-4">
+              <h2 className="mb-2 label-mono">{b.label}</h2>
               <ol className="flex flex-col gap-1">
-                {dayItems
-                  .filter((i) => i.session_label === s)
-                  .map((i) => {
+                {b.items.map((i) => {
                     const live = isWithin(now, i.starts_at, i.ends_at);
                     return (
                       <li key={i.id} aria-current={live ? "true" : undefined} className={`flex gap-3 rounded p-2 ${live ? "border border-nave-gold bg-nave-gold/10" : ""}`}>

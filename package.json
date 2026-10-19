@@ -11,7 +11,9 @@
     "test:watch": "vitest",
     "seed:demo": "tsx scripts/seed-demo.ts",
     "seed:demo:sql": "tsx scripts/export-seed-sql.ts",
-    "seed:demo:event": "tsx scripts/seed-demo-event.ts"
+    "seed:demo:event": "tsx scripts/seed-demo-event.ts",
+    "shots": "node scripts/shots.mjs",
+    "import:cronograma": "tsx scripts/import-cronograma.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.45.4",

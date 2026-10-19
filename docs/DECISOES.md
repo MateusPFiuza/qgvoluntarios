@@ -275,3 +275,14 @@ A pedido do autor do projeto, isto sobrepõe a seção 3 e a seção 11 da espec
 ## 33. Lista completa de voluntários nos campos de escolha (decisão do autor)
 
 Fora do login, todo campo de escolher voluntário mostra a lista completa, filtrada enquanto a pessoa digita: busca, check-in por nome, rádios, elogios e pins. A lista vem de `/api/volunteers/directory`, que exige sessão e devolve só nome, equipe e líder. O login continua exigindo 3 letras (seção 5.2), porque ali ainda não há sessão. A equipe aparece em destaque em cada item, por causa dos homônimos.
+
+## 34. Cronograma importado da planilha v1
+
+`npm run import:cronograma` lê a aba CRONOGRAMA de `docs/fonte/CRONOGRAMA_GERAÇÃO_2026_v1.xlsx` (ignora Página6 e LISTA CONVIDADOS) e grava `supabase/seed/demo/schedule_items.json` com `is_mock = false`. Com `--sql arquivo.sql` gera também o upsert para o banco já no ar. Regras em `lib/rules/cronograma.ts`:
+- O fim de cada item é o início do próximo; se a duração da linha terminar antes, vale a duração. Assim os itens nunca se sobrepõem. Exemplo: o intervalo de sábado tem 2h a partir de 12:05, mas o Relógio começa 13:55, então o item do cronograma vai até 13:55. A janela da refeição (almoço até 14:00) continua a de `meals`.
+- Linha sem duração e sem item seguinte no dia (encerramentos) ganha 15 minutos.
+- Sexta não tem sessões na planilha: rótulo "Programação". Intervalos usam o rótulo "Intervalo" e viram bloco próprio; quando começam junto com uma refeição, o título ganha o apelido, por exemplo "Intervalo (almoço)".
+- Títulos e apresentadores ficam como estão na planilha, sem correção.
+- A tela mostra "versão provisória v1" (`config.scheduleVersionLabel`) quando os itens não são de exemplo.
+- Abertura do evento passou a 18:30 de sexta e o fim a 17:55 de domingo (`config.eventStart`/`eventEnd`).
+- Ficaram de exemplo as refeições que não batem com a planilha: janta de sexta (17:00 a 19:00, antes do check-in) e lanche de domingo (15:30, durante a Santa Missa). Ajustar quando o cardápio real chegar.
