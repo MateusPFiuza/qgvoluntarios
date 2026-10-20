@@ -14,14 +14,6 @@ export function isDemoMode(): boolean {
   return process.env.DEMO_MODE === "true" || getSupabaseConfig() === null;
 }
 
-/**
- * Logins de teste (com senhas de ADM) só aparecem com DEMO_MODE=true explícito.
- * A semente em memória sem Supabase não basta: assim nada vaza por engano.
- */
-export function showDemoLogins(): boolean {
-  return process.env.DEMO_MODE === "true";
-}
-
 export function getSupabaseConfig() {
   // Em modo demonstração sem Supabase real configurado, retornamos null e
   // o restante do código usa o armazenamento de demonstração em memória/seed

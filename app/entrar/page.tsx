@@ -1,18 +1,14 @@
 import { redirect } from "next/navigation";
 import { getVolunteerSession } from "@/lib/server/session";
-import { showDemoLogins } from "@/lib/server/env";
 import { VolunteerLoginForm } from "@/components/VolunteerLoginForm";
 import { LogoGeracaoAtomika } from "@/components/brand/Logo";
 import { StripeDivider } from "@/components/brand/StripeDivider";
-import demoLogins from "@/supabase/seed/demo/logins-de-teste.json";
 
 export const dynamic = "force-dynamic";
 
 export default async function EntrarPage() {
   const session = await getVolunteerSession();
   if (session) redirect("/");
-
-  const demoMode = showDemoLogins();
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-8 px-5 py-10">
@@ -27,21 +23,6 @@ export default async function EntrarPage() {
         <VolunteerLoginForm />
       </div>
 
-      {demoMode && (
-        <div className="rounded-xl border border-nave-bezel p-4 text-sm text-nave-text-secondary">
-          <p className="mb-2 font-semibold text-nave-text">
-            Modo demonstração <span className="selo-exemplo">exemplo</span>
-          </p>
-          <p className="mb-2">Dados fictícios. Use um destes logins de teste:</p>
-          <ul className="space-y-1">
-            {demoLogins.map((l) => (
-              <li key={l.name}>
-                {l.name}: CPF {l.cpfLast4}, nasc. {l.birthDDMM} ({l.team}, {l.role})
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
