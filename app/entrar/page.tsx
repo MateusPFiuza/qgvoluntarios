@@ -13,7 +13,7 @@ export default async function EntrarPage() {
   const demoMode = isDemoMode();
 
   return (
-    <div className="flex min-h-screen flex-col gap-8 px-5 py-10">
+    <div className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-8 px-5 py-10">
       <header className="flex flex-col items-center text-center">
         <LogoGeracaoAtomika priority className="h-auto w-56" />
         <StripeDivider className="mt-6 w-48" />

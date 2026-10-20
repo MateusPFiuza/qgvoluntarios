@@ -61,24 +61,40 @@ export function RadioConsole() {
   }, [reload]);
 
   return (
-    <div className="flex flex-col gap-4 text-base">
-      <div className="grid grid-cols-3 gap-2" role="tablist">
-        {(["retirar", "devolver", "painel"] as const).map((t) => (
-          <button
-            key={t}
-            role="tab"
-            aria-selected={tab === t}
-            onClick={() => setTab(t)}
-            className={`tap-target rounded border font-mono text-sm uppercase ${tab === t ? "border-nave-gold bg-nave-gold text-nave-bg" : "border-nave-gold-dim text-nave-text-secondary"}`}
-          >
-            {t}
-          </button>
-        ))}
+    <div className="flex flex-col gap-4 text-base lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
+      {/* No notebook (1024 px ou mais): lista de rádios à esquerda, formulário à direita. */}
+      <section className="hidden lg:block" aria-label="Rádios agora">
+        <RadioPanel radios={radios} isAdm={isAdm} onChange={reload} />
+      </section>
+      <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-3 gap-2 lg:grid-cols-2" role="tablist">
+          {(["retirar", "devolver", "painel"] as const).map((t) => (
+            <button
+              key={t}
+              role="tab"
+              aria-selected={tab === t}
+              onClick={() => setTab(t)}
+              className={`tap-target rounded border font-mono text-sm uppercase ${t === "painel" ? "lg:hidden" : ""} ${
+                tab === t ? "border-nave-gold bg-nave-gold text-nave-bg" : "border-nave-gold-dim text-nave-text-secondary"
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+        {loadError && (
+          <p role="alert" className="text-nave-danger">
+            {loadError}
+          </p>
+        )}
+        {tab === "retirar" && <CheckoutFlow radios={radios} onDone={reload} />}
+        {tab === "devolver" && <ReturnFlow radios={radios} onDone={reload} />}
+        {tab === "painel" && (
+          <div className="lg:hidden">
+            <RadioPanel radios={radios} isAdm={isAdm} onChange={reload} />
+          </div>
+        )}
       </div>
-      {loadError && <p role="alert" className="text-nave-danger">{loadError}</p>}
-      {tab === "retirar" && <CheckoutFlow radios={radios} onDone={reload} />}
-      {tab === "devolver" && <ReturnFlow radios={radios} onDone={reload} />}
-      {tab === "painel" && <RadioPanel radios={radios} isAdm={isAdm} onChange={reload} />}
     </div>
   );
 }

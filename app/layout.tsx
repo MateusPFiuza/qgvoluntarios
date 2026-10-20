@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="relative min-h-screen bg-nave-bg text-nave-text">
         <Starfield />
         <BootSequence />
-        <main className="relative z-10 mx-auto min-h-screen w-full max-w-md md:max-w-2xl">{children}</main>
+        <main className="relative z-10 mx-auto min-h-screen w-full max-w-md md:max-w-2xl lg:max-w-6xl">{children}</main>
       </body>
     </html>
   );

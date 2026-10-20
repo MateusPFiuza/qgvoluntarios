@@ -40,7 +40,7 @@ export function AppShell({
   brand?: boolean;
 }) {
   return (
-    <div className="flex min-h-screen flex-col px-5 pb-32 pt-6">
+    <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col px-5 pb-32 pt-6">
       <header className={`flex items-center justify-between gap-3 ${brand ? "mb-3" : "mb-6"}`}>
         <div className="min-w-0">
           {brand ? <LogoG26 priority className="mb-3 h-9 w-auto" /> : <p className="label-mono">G&apos;26 Voluntários</p>}

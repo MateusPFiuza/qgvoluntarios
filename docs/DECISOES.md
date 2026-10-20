@@ -308,3 +308,11 @@ Fora do login, todo campo de escolher voluntário mostra a lista completa, filtr
 - Sem busca, a tela mostra quem a pessoa já elogiou nesta janela, com os ícones que ela mesma enviou.
 - Ao tocar num nome, sobe uma folha com os três botões grandes, estados "Enviado" e "Não enviado". Fecha com o botão "Fechar", com Esc, tocando fora ou arrastando para baixo (mais de 80 px).
 - A pessoa não aparece na própria busca, e o servidor continua recusando autoelogio.
+
+## 38. Prioridade média dos ajustes de interface
+
+- Busca de voluntário: lista só com 2 letras ou mais, local em uma linha ("Refeitório, até 14:00" ou "Intervalo no Refeitório, até 14:00") e o aviso "local previsto pela escala, pode ter mudado" uma vez, no topo. O botão de limpar dos campos de busca usa o dourado da paleta (`app/globals.css`).
+- Barra inferior: Início, Agenda, Meu QR (destaque no centro), Refeições, Mais. Mapa foi para Mais, junto com Buscar, Elogios e Privacidade.
+- Entrada da Área do QG: cada módulo mostra um número ao vivo (`/api/qg/summary`, atualiza a cada 15 s): refeição atual consumidas de preparadas, rádios fora e não devolvidos, estado da janela de elogios.
+- Painel de refeições: equipes da menor para a maior porcentagem; em laranja, com o texto "atenção", as abaixo de `MEAL_LOW_THRESHOLD_PCT` (padrão 50) depois da metade da janela da refeição. Mostra "Atualizado há N s" e um botão de atualizar.
+- A partir de 1024 px, as telas do QG usam até 6xl de largura e duas colunas: no painel, "por equipe" à esquerda e "ainda não comeu" à direita; nos rádios, a lista à esquerda e o formulário à direita (a aba "painel" some, porque a lista já está visível). As telas do voluntário continuam numa coluna central de até 2xl.

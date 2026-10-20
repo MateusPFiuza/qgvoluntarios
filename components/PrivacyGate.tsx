@@ -18,7 +18,7 @@ export function PrivacyGate() {
     }
   };
   return (
-    <div className="flex min-h-screen flex-col justify-center gap-4 px-4 py-8">
+    <div className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-4 px-5 py-8">
       <div className="painel flex flex-col gap-3 p-5">
         <h1 className="font-display text-2xl font-semibold text-nave-text">Antes de começar</h1>
         <span className="selo-exemplo self-start">texto de exemplo</span>
