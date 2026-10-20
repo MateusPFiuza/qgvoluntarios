@@ -1,7 +1,7 @@
 import { requireVolunteerPage } from "@/lib/server/guard";
 import { getNow } from "@/lib/server/clock";
 import { listLocations, listTeamSchedule, listTeams, listVolunteerDirectory } from "@/lib/server/repo";
-import { probableLocation } from "@/lib/rules/mission";
+import { probableLocation, shortLocationLine } from "@/lib/rules/mission";
 import { formatHM } from "@/lib/rules/time";
 import { AppShell } from "@/components/AppShell";
 import { BuscarList, type BuscarRow } from "@/components/BuscarList";
@@ -15,12 +15,7 @@ export default async function BuscarPage() {
 
   const rows: BuscarRow[] = volunteers.map((v) => {
     const loc = probableLocation(slots, v.team_id, now);
-    let where = "Sem escala disponível.";
-    if (loc.kind === "fora_de_turno") where = "Equipe sem turno neste horário.";
-    if (loc.kind === "local") {
-      const place = locations.find((l) => l.id === loc.locationId)?.name ?? "Local a definir";
-      where = `${loc.isBreak ? "Em intervalo: " : ""}${place}, ${loc.activity} (até ${formatHM(loc.until)})`;
-    }
+    const where = shortLocationLine(loc, (id) => locations.find((l) => l.id === id)?.name ?? "Local a definir", formatHM);
     return {
       id: v.id,
       name: v.full_name,

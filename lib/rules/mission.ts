@@ -40,3 +40,11 @@ export function probableLocation(slots: TeamSlot[], teamId: string | null, now: 
   if (!slot) return { kind: "fora_de_turno" };
   return { kind: "local", activity: slot.activity, locationId: slot.location_id, isBreak: slot.is_break, until: slot.ends_at };
 }
+
+/** Linha curta para a busca: "Refeitório, até 14:00" ou "Intervalo no Refeitório, até 14:00". */
+export function shortLocationLine(loc: ProbableLocation, placeName: (id: string | null) => string, fmt: (iso: string) => string): string {
+  if (loc.kind === "sem_escala") return "Sem escala disponível";
+  if (loc.kind === "fora_de_turno") return "Equipe fora de turno agora";
+  const place = placeName(loc.locationId);
+  return `${loc.isBreak ? `Intervalo no ${place}` : place}, até ${fmt(loc.until)}`;
+}

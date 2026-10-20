@@ -48,3 +48,14 @@ describe("local provável", () => {
     expect(probableLocation(slots, "t1", new Date("2026-12-12T23:00:00-03:00"))).toEqual({ kind: "fora_de_turno" });
   });
 });
+
+describe("linha curta de local na busca", () => {
+  const name = () => "Refeitório";
+  const fmt = () => "14:00";
+  it("formata local, intervalo e ausência de escala", async () => {
+    const { shortLocationLine } = await import("./mission");
+    expect(shortLocationLine({ kind: "local", activity: "x", locationId: "r", isBreak: false, until: "" }, name, fmt)).toBe("Refeitório, até 14:00");
+    expect(shortLocationLine({ kind: "local", activity: "x", locationId: "r", isBreak: true, until: "" }, name, fmt)).toBe("Intervalo no Refeitório, até 14:00");
+    expect(shortLocationLine({ kind: "sem_escala" }, name, fmt)).toBe("Sem escala disponível");
+  });
+});
