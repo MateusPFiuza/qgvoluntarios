@@ -86,8 +86,7 @@ export default async function CronogramaPage({ searchParams }: { searchParams: {
                             {live && <strong className="ml-2 font-mono text-xs text-nave-gold">AGORA</strong>}
                           </span>
                           <span className="text-xs text-nave-text-secondary">
-                            {KIND_LABEL[i.kind] ?? i.kind}
-                            {i.performer ? ` · ${i.performer}` : ""}
+                            {[i.kind === "outro" ? null : KIND_LABEL[i.kind] ?? i.kind, i.performer].filter(Boolean).join(" · ")}
                           </span>
                         </span>
                       </li>
