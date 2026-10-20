@@ -1,5 +1,9 @@
 import { requireVolunteerPage } from "@/lib/server/guard";
-import { getVolunteerById, listTeams } from "@/lib/server/repo";
+import { getNow } from "@/lib/server/clock";
+import { config } from "@/lib/config";
+import { getVolunteerById, listCheckins, listMeals, listTeams } from "@/lib/server/repo";
+import { qrMealStatus } from "@/lib/rules/home";
+import { toDate } from "@/lib/rules/time";
 import { PersonalQr } from "@/components/PersonalQr";
 import { AppShell } from "@/components/AppShell";
 
@@ -7,8 +11,16 @@ export const dynamic = "force-dynamic";
 
 export default async function MinhaIdentificacaoPage() {
   const session = await requireVolunteerPage();
-  const [volunteer, teams] = await Promise.all([getVolunteerById(session.sub), listTeams()]);
+  const now = await getNow();
+  const [volunteer, teams, meals, checkins] = await Promise.all([
+    getVolunteerById(session.sub),
+    listTeams(),
+    config.mealsEnabled() ? listMeals() : Promise.resolve([]),
+    config.mealsEnabled() ? listCheckins({ volunteerId: session.sub }) : Promise.resolve([]),
+  ]);
   const team = teams.find((t) => t.id === volunteer?.team_id);
+  const consumed = new Map(checkins.filter((c) => toDate(c.created_at) <= now).map((c) => [c.meal_id, c.created_at]));
+  const mealStatus = config.mealsEnabled() ? qrMealStatus(meals, consumed, now) : null;
 
   return (
     <AppShell title="Minha identificação" active="qr">
@@ -20,7 +32,7 @@ export default async function MinhaIdentificacaoPage() {
             {session.isLeader ? " · Líder" : ""}
           </p>
         </div>
-        <PersonalQr />
+        <PersonalQr mealStatus={mealStatus} />
       </div>
     </AppShell>
   );

@@ -37,3 +37,12 @@ export function teamSlotTitle(slot: { activity: string; is_break: boolean }, win
   return window ? `Intervalo. Refeição às ${formatHM(window.starts_at)}` : "Intervalo";
 }
 
+
+/** Linha de status da refeição na tela do QR (prompt de ajustes, item 11). */
+export function qrMealStatus<T extends MealLike>(meals: T[], consumed: Map<string, string>, now: Date): { text: string; tone: "ok" | "done" | "info" } | null {
+  const card = mealCard(meals, consumed, now);
+  if (card.state === "agora") return { text: `${mealShortName(card.meal)}: liberado`, tone: "ok" };
+  if (card.state === "registrada") return { text: `${mealShortName(card.meal)}: já registrado às ${formatHM(consumed.get(card.meal.id)!)}`, tone: "done" };
+  if (card.state === "proxima") return { text: `Próxima refeição: ${mealShortName(card.meal)} às ${formatHM(card.meal.starts_at)}`, tone: "info" };
+  return null;
+}

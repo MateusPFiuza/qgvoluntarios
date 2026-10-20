@@ -35,3 +35,12 @@ describe("texto do turno da equipe", () => {
     expect(teamSlotTitle({ activity: "Recepção", is_break: false }, null)).toBe("Recepção");
   });
 });
+
+describe("status da refeição na tela do QR", () => {
+  it("liberado, já registrado e próxima", async () => {
+    const { qrMealStatus } = await import("./home");
+    expect(qrMealStatus(meals, new Map(), at("12:40"))).toEqual({ text: "Almoço: liberado", tone: "ok" });
+    expect(qrMealStatus(meals, new Map([["a", "2026-12-12T12:16:00-03:00"]]), at("12:40"))?.text).toBe("Almoço: já registrado às 12:16");
+    expect(qrMealStatus(meals, new Map(), at("15:00"))?.text).toBe("Próxima refeição: Lanche às 16:10");
+  });
+});
