@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { config } from "@/lib/config";
 import { requireAdminApi } from "@/lib/server/guard";
 import { getNow } from "@/lib/server/clock";
-import { computeMealDashboard, pickDefaultMeal } from "@/lib/rules/meals";
+import { computeMealDashboard, isTeamLagging, pickDefaultMeal } from "@/lib/rules/meals";
 import { dayKey, formatHM } from "@/lib/rules/time";
 import { listActiveVolunteersWithDiet, listCheckins, listEventDays, listMeals, listTeams } from "@/lib/server/repo";
 
@@ -26,7 +26,9 @@ export async function GET(request: Request) {
   const meal = meals.find((m) => m.id === requested) ?? pickDefaultMeal(meals, now);
   if (!meal) return NextResponse.json({ error: "Nenhuma refeição cadastrada." }, { status: 404 });
 
-  const dashboard = computeMealDashboard({ meal, checkins, volunteers, teams });
+  const base = computeMealDashboard({ meal, checkins, volunteers, teams });
+  const threshold = config.mealLowThresholdPct();
+  const dashboard = { ...base, byTeam: base.byTeam.map((t) => ({ ...t, lagging: isTeamLagging(t.pct, meal, now, threshold) })) };
   const dayTotals = days.map((d) => {
     const dayMeals = meals.filter((m) => dayKey(m.starts_at) === d.date);
     const ids = new Set(dayMeals.map((m) => m.id));
@@ -43,6 +45,7 @@ export async function GET(request: Request) {
       meals: meals.map((m) => ({ id: m.id, label: m.label })),
       dashboard,
       dayTotals,
+      thresholdPct: threshold,
       updatedAt: new Date().toISOString(),
     },
     { headers: { "Cache-Control": "no-store" } },

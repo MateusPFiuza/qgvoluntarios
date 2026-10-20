@@ -69,7 +69,9 @@ describe("painel da refeição", () => {
     });
     expect(d.consumed).toBe(1);
     expect(d.remaining).toBe(9);
-    expect(d.byTeam[0]).toMatchObject({ ate: 1, total: 2, pct: 50 });
+    // Da menor para a maior porcentagem.
+    expect(d.byTeam.map((t) => [t.teamName, t.pct])).toEqual([["Space", 0], ["Acolhida", 50]]);
+    expect(d.byTeam[1]).toMatchObject({ ate: 1, total: 2, pct: 50 });
     expect(d.notEaten.map((n) => n.fullName)).toEqual(["Bia", "Caio"]);
   });
 });
@@ -79,5 +81,15 @@ describe("contagem regressiva", () => {
     expect(formatCountdown(52 * 60_000)).toBe("52 min");
     expect(formatCountdown(125 * 60_000)).toBe("2 h 05 min");
     expect(formatCountdown(5 * 24 * 3600_000)).toBe("5 dias");
+  });
+});
+
+describe("painel: ordem e destaque das equipes", () => {
+  it("destaca abaixo do limite só depois da metade da janela", async () => {
+    const { isTeamLagging } = await import("./meals");
+    const meal = { starts_at: "2026-12-12T12:00:00-03:00", ends_at: "2026-12-12T14:00:00-03:00" };
+    expect(isTeamLagging(30, meal, new Date("2026-12-12T12:30:00-03:00"), 50)).toBe(false);
+    expect(isTeamLagging(30, meal, new Date("2026-12-12T13:00:00-03:00"), 50)).toBe(true);
+    expect(isTeamLagging(60, meal, new Date("2026-12-12T13:30:00-03:00"), 50)).toBe(false);
   });
 });

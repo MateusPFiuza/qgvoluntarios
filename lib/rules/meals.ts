@@ -89,7 +89,7 @@ export function computeMealDashboard(params: {
       ate: ateCount,
       pct: members.length === 0 ? 0 : Math.round((ateCount / members.length) * 100),
     };
-  });
+  }).sort((a, b) => a.pct - b.pct || a.teamName.localeCompare(b.teamName, "pt-BR"));
 
   const notEaten = params.volunteers
     .filter((v) => !ate.has(v.id))
@@ -109,4 +109,14 @@ export function computeMealDashboard(params: {
     byTeam,
     notEaten,
   };
+}
+
+/**
+ * Equipe atrasada no painel: depois da metade da janela da refeição, abaixo
+ * do limite (padrão 50%). Antes da metade ninguém é destacado.
+ */
+export function isTeamLagging(pct: number, meal: Pick<MealLike, "starts_at" | "ends_at">, now: Date, thresholdPct: number): boolean {
+  const start = toDate(meal.starts_at).getTime();
+  const mid = start + (toDate(meal.ends_at).getTime() - start) / 2;
+  return now.getTime() >= mid && pct < thresholdPct;
 }

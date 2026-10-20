@@ -16,6 +16,8 @@ export const config = {
   // Relógio padrão da demonstração: sábado no almoço, para as telas terem movimento.
   demoDefaultNow: "2026-12-12T12:40:00-03:00",
   adminIdleMinutes: 30,
+  // Painel de refeições: equipe em destaque abaixo deste percentual depois da metade da janela.
+  mealLowThresholdPct: () => Number(process.env.MEAL_LOW_THRESHOLD_PCT ?? 50),
   // Rótulo do cronograma quando os itens vêm da planilha (is_mock = false).
   scheduleVersionLabel: "versão provisória v1",
   // PENDENTE: estoque real dos 3 pins do kit.
