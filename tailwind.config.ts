@@ -19,6 +19,7 @@ const config: Config = {
           panel: "#15100B",
           bezel: "#201811",
           gold: "#E8B85A",
+          // Só para bordas: em texto fica abaixo de 4,5:1.
           "gold-dim": "#8A7245",
           orange: "#E5672F",
           red: "#C8232C",

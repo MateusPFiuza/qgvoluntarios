@@ -67,7 +67,7 @@ body {
   color: #f3e6cc;
 }
 .campo::placeholder {
-  color: #8a7245;
+  color: #b89a63;
 }
 .campo:focus {
   border-color: #e8b85a;
