@@ -324,3 +324,10 @@ Fora do login, todo campo de escolher voluntário mostra a lista completa, filtr
 - Estados dos elogios: "Enviado" e "Não enviado" (feito no item 4).
 - Logins de teste, com as senhas de ADM, só aparecem com `DEMO_MODE=true` explícito (`showDemoLogins()` em `lib/server/env.ts`). Sem Supabase o app continua em modo demonstração, mas não mostra os logins. Conferido: com `DEMO_MODE=false` o HTML de `/entrar` não contém nenhum login nem senha.
 - `npm run shots [pasta]` gera capturas das telas principais em 390x844 e 1280x800 (precisa do app rodando e do Playwright; `BASE_URL` e `CHROMIUM_PATH` opcionais).
+
+## 40. Elogios direto no card e sem logins de teste na entrada (decisão do autor)
+
+- Substitui o item 37 e o item 13 da prioridade baixa (decisão 39) quanto aos logins.
+- Elogios: não há mais folha inferior. Cada card de voluntário traz nome, equipe e os três botões (Feliz, Facilitador, Por inteiro), com `aria-pressed` e texto "Enviado"/"Não enviado". Tocar envia, tocar de novo retira; erro de rede reverte o estado e mostra a mensagem no próprio card.
+- A lista completa aparece sem digitar; o campo de busca fica fixo no topo e só filtra. O próprio usuário não aparece.
+- Tela de entrada: o quadro de logins de teste foi removido em qualquer modo. Os logins seguem documentados em `supabase/seed/demo/LOGINS_DE_TESTE.md`.
