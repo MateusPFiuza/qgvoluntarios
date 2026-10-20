@@ -23,7 +23,7 @@ export default async function MapaPage() {
   }));
 
   return (
-    <AppShell title="Mapa" active="mapa">
+    <AppShell title="Mapa" active="mais">
       <MapView points={points} isMock={locations.some((l) => l.is_mock)} />
     </AppShell>
   );

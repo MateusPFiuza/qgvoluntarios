@@ -11,7 +11,7 @@ export default async function MinhaIdentificacaoPage() {
   const team = teams.find((t) => t.id === volunteer?.team_id);
 
   return (
-    <AppShell title="Minha identificação" active="mais">
+    <AppShell title="Minha identificação" active="qr">
       <div className="painel flex flex-col gap-4 p-5">
         <div className="text-center">
           <p className="text-xl text-nave-text">{session.name}</p>

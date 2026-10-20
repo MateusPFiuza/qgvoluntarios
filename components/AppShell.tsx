@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LogoG26 } from "@/components/brand/Logo";
 import { StripeDivider } from "@/components/brand/StripeDivider";
 
-export type TabKey = "inicio" | "agenda" | "refeicoes" | "mapa" | "mais";
+export type TabKey = "inicio" | "agenda" | "qr" | "refeicoes" | "mais";
 
 const ICONS: Record<TabKey, React.ReactNode> = {
   inicio: <path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />,
@@ -13,20 +13,15 @@ const ICONS: Record<TabKey, React.ReactNode> = {
     </>
   ),
   refeicoes: <path d="M7 3v8a2 2 0 0 0 4 0V3M9 11v10M17 3c-2 2-2 6 0 8v10" />,
-  mapa: (
-    <>
-      <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
-      <circle cx="12" cy="10" r="2.5" />
-    </>
-  ),
+  qr: <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2" />,
   mais: <path d="M4 7h16M4 12h16M4 17h16" />,
 };
 
 const TABS: { key: TabKey; href: string; label: string }[] = [
   { key: "inicio", href: "/", label: "Início" },
   { key: "agenda", href: "/cronograma", label: "Agenda" },
+  { key: "qr", href: "/minha-identificacao", label: "Meu QR" },
   { key: "refeicoes", href: "/refeicoes", label: "Refeições" },
-  { key: "mapa", href: "/mapa", label: "Mapa" },
   { key: "mais", href: "/mais", label: "Mais" },
 ];
 
@@ -59,6 +54,24 @@ export function AppShell({
         <ul className="mx-auto grid max-w-md grid-cols-5 md:max-w-2xl">
           {TABS.map((t) => {
             const isActive = t.key === active;
+            if (t.key === "qr") {
+              return (
+                <li key={t.key} className="flex justify-center">
+                  <Link
+                    href={t.href}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`-mt-4 flex min-h-[64px] w-[72px] flex-col items-center justify-center gap-0.5 rounded-2xl text-xs font-semibold shadow-lg ${
+                      isActive ? "bg-nave-text text-nave-bg ring-2 ring-nave-gold" : "bg-nave-gold text-nave-bg"
+                    }`}
+                  >
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      {ICONS[t.key]}
+                    </svg>
+                    {t.label}
+                  </Link>
+                </li>
+              );
+            }
             return (
               <li key={t.key}>
                 <Link

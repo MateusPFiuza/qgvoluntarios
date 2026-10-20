@@ -9,7 +9,7 @@ export default async function MaisPage() {
   const session = await requireVolunteerPage();
   const admin = await getAdminAccountByVolunteerId(session.sub);
   const links = [
-    { href: "/minha-identificacao", label: "Minha identificação", hint: "QR pessoal para refeições e rádios" },
+    { href: "/mapa", label: "Mapa", hint: "Refeitório, banheiros, enfermaria e QG" },
     { href: "/buscar", label: "Buscar voluntário", hint: "Equipe e local previsto" },
     { href: "/elogios", label: "Elogios", hint: "Reconheça quem serve com você" },
     { href: "/privacidade", label: "Privacidade", hint: "Como seus dados são usados" },
