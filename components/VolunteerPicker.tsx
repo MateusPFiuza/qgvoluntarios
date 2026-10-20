@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { normalizeForSearch } from "@/lib/rules/name-search";
 
 export type PickedVolunteer = { id: string; fullName: string; teamName: string | null; isLeader: boolean; teamId?: string | null };
-type Entry = PickedVolunteer & { searchName: string };
+export type DirectoryEntry = PickedVolunteer & { searchName: string };
+type Entry = DirectoryEntry;
 
 let cache: Promise<Entry[]> | null = null;
 
-function loadDirectory(): Promise<Entry[]> {
+export function loadDirectory(): Promise<Entry[]> {
   if (!cache) {
     cache = fetch("/api/volunteers/directory")
       .then(async (res) => {

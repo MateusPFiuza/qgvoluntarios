@@ -301,3 +301,10 @@ Fora do login, todo campo de escolher voluntário mostra a lista completa, filtr
 - O cartão da refeição vem primeiro, com borda dourada e o botão "Mostrar meu QR" dentro (regras em `lib/rules/home.ts`). Estados: "Almoço agora, até 14:00"; "Almoço registrado às 12:16" com a próxima em menor destaque; ou a próxima refeição com contagem regressiva.
 - "Viajar no tempo" virou um ícone de relógio no cabeçalho que abre um painel. Aparece na demonstração (com selo "Demo" quando o relógio está simulado) e, em produção, só com a sessão de ADM ativa, como a API já exigia.
 - Turno de intervalo da equipe: "Intervalo. Refeição às HH:MM", usando o início da janela da equipe que cai dentro do intervalo; sem janela, só "Intervalo". O prompt cita "12:43", que é o fim da janela de exemplo; usamos o início porque é o horário em que a equipe deve ir comer.
+
+## 37. Elogios: busca primeiro, ícones numa folha inferior
+
+- A lista só aparece com 2 letras ou mais e fica na rolagem normal da página. Isso sobrepõe a decisão 33 nos elogios (e, no item 5, na busca de voluntário). No check-in, rádios e pins do QG a lista completa continua.
+- Sem busca, a tela mostra quem a pessoa já elogiou nesta janela, com os ícones que ela mesma enviou.
+- Ao tocar num nome, sobe uma folha com os três botões grandes, estados "Enviado" e "Não enviado". Fecha com o botão "Fechar", com Esc, tocando fora ou arrastando para baixo (mais de 80 px).
+- A pessoa não aparece na própria busca, e o servidor continua recusando autoelogio.
