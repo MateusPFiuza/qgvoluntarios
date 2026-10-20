@@ -331,3 +331,10 @@ Fora do login, todo campo de escolher voluntário mostra a lista completa, filtr
 - Elogios: não há mais folha inferior. Cada card de voluntário traz nome, equipe e os três botões (Feliz, Facilitador, Por inteiro), com `aria-pressed` e texto "Enviado"/"Não enviado". Tocar envia, tocar de novo retira; erro de rede reverte o estado e mostra a mensagem no próprio card.
 - A lista completa aparece sem digitar; o campo de busca fica fixo no topo e só filtra. O próprio usuário não aparece.
 - Tela de entrada: o quadro de logins de teste foi removido em qualquer modo. Os logins seguem documentados em `supabase/seed/demo/LOGINS_DE_TESTE.md`.
+
+## 41. Caixa alta na Sansgeo, data de nascimento completa e elogios sem texto de estado (decisão do autor)
+
+- Todo texto com a fonte Sansgeo (`font-display`) fica em caixa alta, via `text-transform: uppercase` em `app/globals.css`.
+- Login: a credencial passa a ser os 4 últimos dígitos do CPF + a data de nascimento completa (DDMMAAAA), digitada como DD/MM/AAAA com máscara automática e exemplo "Ex.: 25/12/2000". O servidor só aceita datas reais (dia e mês válidos, ano a partir de 1900, não futura). Isso aumenta o espaço de combinações de 366 para cerca de 366 x 60 datas plausíveis.
+- Sem migração: a coluna `birth_dm` continua com DDMM; só o `pin_hash` muda. A semente fictícia ganhou anos de 1990 a 2008 (fórmula estável por índice em `scripts/seed-demo.ts`), e `LOGINS_DE_TESTE.md` mostra as datas completas.
+- Elogios: os textos "Enviado"/"Não enviado" saíram da tela. O estado aparece por preenchimento e borda forte, e continua anunciado ao leitor de tela por `aria-pressed` e `aria-label`. Botões e cards ganharam mais espaçamento interno.

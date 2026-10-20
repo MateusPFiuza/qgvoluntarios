@@ -95,7 +95,7 @@ async function main() {
   const volunteers: any[] = [];
   const volunteersPrivate: any[] = [];
   const adminAccounts: any[] = [];
-  const demoCredentials: { name: string; cpfLast4: string; birthDDMM: string; team: string; role: string }[] = [];
+  const demoCredentials: { name: string; cpfLast4: string; birthDate: string; team: string; role: string }[] = [];
 
   const totalVolunteers = 42;
 
@@ -110,11 +110,13 @@ async function main() {
     const isLeader = i % 7 === 0; // alguns líderes
     const day = String((i % 28) + 1).padStart(2, "0");
     const month = String(((i * 2) % 12) + 1).padStart(2, "0");
+    const year = String(demoBirthYear(i));
     const birthDDMM = `${day}${month}`;
+    const birthDate = `${day}${month}${year}`;
     const cpfLast4 = String(1000 + i * 137).slice(-4).padStart(4, "0");
 
     const id = randomUUID();
-    const plaintext = buildCredentialPlaintext(cpfLast4, birthDDMM);
+    const plaintext = buildCredentialPlaintext(cpfLast4, birthDate);
     const pinHash = await hashCredential(plaintext);
 
     volunteers.push({
@@ -145,7 +147,7 @@ async function main() {
       demoCredentials.push({
         name: fullName,
         cpfLast4,
-        birthDDMM,
+        birthDate: formatBirth(birthDate),
         team: team.name,
         role: isLeader ? "líder" : "voluntário",
       });
@@ -164,6 +166,7 @@ async function main() {
     const day = "01";
     const month = "01";
     const birthDDMM = `${day}${month}`;
+    const birthDate = `${day}${month}1990`;
     const cpfLast4 = "0000";
 
     volunteers.push({
@@ -173,7 +176,7 @@ async function main() {
       team_id: qgTeam.id,
       is_leader: false,
       photo_path: null,
-      pin_hash: await hashCredential(buildCredentialPlaintext(cpfLast4, birthDDMM)),
+      pin_hash: await hashCredential(buildCredentialPlaintext(cpfLast4, birthDate)),
       birth_dm: birthDDMM,
       diet_notes: null,
       login_locked_until: null,
@@ -197,7 +200,7 @@ async function main() {
     demoCredentials.push({
       name: `${def.name}, senha ADM: ${def.password}`,
       cpfLast4,
-      birthDDMM,
+      birthDate: formatBirth(birthDate),
       team: qgTeam.name,
       role: "ADM",
     });
@@ -213,10 +216,10 @@ async function main() {
     "",
     "Dados 100% fictícios, gerados por scripts/seed-demo.ts. Nunca usar em produção.",
     "",
-    "| Nome | 4 últimos do CPF | Nasc. (DDMM) | Equipe | Papel |",
+    "| Nome | 4 últimos do CPF | Nascimento | Equipe | Papel |",
     "|---|---|---|---|---|",
     ...demoCredentials.map(
-      (c) => `| ${c.name} | ${c.cpfLast4} | ${c.birthDDMM} | ${c.team} | ${c.role} |`,
+      (c) => `| ${c.name} | ${c.cpfLast4} | ${c.birthDate} | ${c.team} | ${c.role} |`,
     ),
     "",
     "Para entrar na Área do QG, use um dos voluntários ADM acima e, depois do",
@@ -232,3 +235,12 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+/** Ano de nascimento fictício e estável por índice (1990 a 2008). */
+export function demoBirthYear(i: number): number {
+  return 1990 + ((i * 7) % 19);
+}
+
+function formatBirth(ddmmyyyy: string): string {
+  return `${ddmmyyyy.slice(0, 2)}/${ddmmyyyy.slice(2, 4)}/${ddmmyyyy.slice(4)}`;
+}

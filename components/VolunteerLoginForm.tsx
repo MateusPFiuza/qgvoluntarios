@@ -18,7 +18,8 @@ export function VolunteerLoginForm() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const [cpfLast4, setCpfLast4] = useState("");
-  const [birthDDMM, setBirthDDMM] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const birthDigits = birthDate.replace(/\D/g, "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -52,13 +53,17 @@ export function VolunteerLoginForm() {
       setError("Escolha seu nome na lista.");
       return;
     }
+    if (!isRealBirthDate(birthDigits)) {
+      setError("Data de nascimento inválida. Use DD/MM/AAAA.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/auth/volunteer/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ volunteerId: selected.id, cpfLast4, birthDDMM }),
+        body: JSON.stringify({ volunteerId: selected.id, cpfLast4, birthDate }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -142,16 +147,17 @@ export function VolunteerLoginForm() {
           </div>
           <div>
             <label htmlFor="nasc" className="block label-mono">
-              Nascimento (DDMM)
+              Data de nascimento
             </label>
             <input
               id="nasc"
               type="text"
               inputMode="numeric"
-              maxLength={4}
-              placeholder="0512"
-              value={birthDDMM}
-              onChange={(e) => setBirthDDMM(e.target.value.replace(/\D/g, "").slice(0, 4))}
+              autoComplete="bday"
+              maxLength={10}
+              placeholder="Ex.: 25/12/2000"
+              value={birthDate}
+              onChange={(e) => setBirthDate(maskBirthDate(e.target.value))}
               className="tap-target mt-1 w-full rounded border border-nave-gold-dim bg-nave-panel px-3 py-3 text-base font-mono text-nave-text outline-none focus-visible:border-nave-gold"
             />
           </div>
@@ -166,11 +172,27 @@ export function VolunteerLoginForm() {
 
       <button
         type="submit"
-        disabled={!selected || cpfLast4.length < 4 || birthDDMM.length < 4 || loading}
+        disabled={!selected || cpfLast4.length < 4 || birthDigits.length < 8 || loading}
         className="tap-target rounded bg-nave-gold px-4 py-3 text-base font-semibold text-nave-bg disabled:opacity-40"
       >
         {loading ? "Entrando..." : "Entrar"}
       </button>
     </form>
   );
+}
+
+function maskBirthDate(raw: string): string {
+  const d = raw.replace(/\D/g, "").slice(0, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return `${d.slice(0, 2)}/${d.slice(2)}`;
+  return `${d.slice(0, 2)}/${d.slice(2, 4)}/${d.slice(4)}`;
+}
+
+function isRealBirthDate(digits: string): boolean {
+  if (!/^\d{8}$/.test(digits)) return false;
+  const day = Number(digits.slice(0, 2));
+  const month = Number(digits.slice(2, 4));
+  const year = Number(digits.slice(4));
+  const dt = new Date(Date.UTC(year, month - 1, day));
+  return dt.getUTCFullYear() === year && dt.getUTCMonth() === month - 1 && dt.getUTCDate() === day && year >= 1900 && dt.getTime() <= Date.now();
 }

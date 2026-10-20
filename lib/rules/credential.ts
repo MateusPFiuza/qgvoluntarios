@@ -2,7 +2,7 @@ import { argon2id, argon2Verify } from "hash-wasm";
 
 /**
  * Regra de credencial do voluntário (seção 5.2):
- * "4 últimos dígitos do CPF" + "DDMM de nascimento".
+ * "4 últimos dígitos do CPF" + "data de nascimento completa (DDMMAAAA)".
  *
  * A credencial nunca é armazenada em texto — apenas seu hash (argon2id).
  * Este módulo cuida só da composição e verificação da credencial; a busca
@@ -17,22 +17,26 @@ export function normalizeCpfLast4(cpf: string): string {
   return digits.slice(-4);
 }
 
-export function normalizeBirthDDMM(ddmm: string): string {
-  const digits = ddmm.replace(/\D/g, "");
-  if (!/^\d{4}$/.test(digits)) {
-    throw new Error("Data de nascimento inválida: use o formato DDMM");
+/** Data de nascimento completa DD/MM/AAAA (com ou sem barras) -> "DDMMAAAA", só se for uma data real. */
+export function normalizeBirthDate(input: string, today: Date = new Date()): string {
+  const digits = input.replace(/\D/g, "");
+  if (!/^\d{8}$/.test(digits)) {
+    throw new Error("Data de nascimento inválida: use DD/MM/AAAA");
   }
   const day = Number(digits.slice(0, 2));
   const month = Number(digits.slice(2, 4));
-  if (day < 1 || day > 31 || month < 1 || month > 12) {
-    throw new Error("Data de nascimento inválida: dia ou mês fora do intervalo");
+  const year = Number(digits.slice(4, 8));
+  const d = new Date(Date.UTC(year, month - 1, day));
+  const real = d.getUTCFullYear() === year && d.getUTCMonth() === month - 1 && d.getUTCDate() === day;
+  if (!real || year < 1900 || d.getTime() > today.getTime()) {
+    throw new Error("Data de nascimento inválida");
   }
   return digits;
 }
 
 /** Monta a credencial em texto, usada apenas em memória, nunca persistida. */
-export function buildCredentialPlaintext(cpfLast4: string, birthDDMM: string): string {
-  return `${cpfLast4}:${birthDDMM}`;
+export function buildCredentialPlaintext(cpfLast4: string, birthDate: string): string {
+  return `${cpfLast4}:${birthDate}`;
 }
 
 const ARGON2_PARAMS = {

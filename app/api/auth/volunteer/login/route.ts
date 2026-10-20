@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import {
   buildCredentialPlaintext,
-  normalizeBirthDDMM,
+  normalizeBirthDate,
   normalizeCpfLast4,
   verifyCredential,
 } from "@/lib/rules/credential";
@@ -20,7 +20,7 @@ import { hashIp } from "@/lib/server/crypto";
 const bodySchema = z.object({
   volunteerId: z.string().uuid(),
   cpfLast4: z.string().min(4).max(14), // aceita formatado ou só os dígitos finais
-  birthDDMM: z.string().min(4).max(10),
+  birthDate: z.string().min(8).max(10),
 });
 
 export async function POST(request: Request) {
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
   }
 
-  const { volunteerId, cpfLast4: rawCpf, birthDDMM: rawBirth } = parsed.data;
+  const { volunteerId, cpfLast4: rawCpf, birthDate: rawBirth } = parsed.data;
   const ipHash = hashIp(ip);
 
   const volunteer = await getVolunteerById(volunteerId);
@@ -64,8 +64,8 @@ export async function POST(request: Request) {
   let ok = false;
   try {
     const cpfLast4 = normalizeCpfLast4(rawCpf);
-    const birthDDMM = normalizeBirthDDMM(rawBirth);
-    const plaintext = buildCredentialPlaintext(cpfLast4, birthDDMM);
+    const birthDate = normalizeBirthDate(rawBirth);
+    const plaintext = buildCredentialPlaintext(cpfLast4, birthDate);
     ok = await verifyCredential(plaintext, volunteer.pin_hash);
   } catch {
     ok = false;
