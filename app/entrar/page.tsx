@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { getVolunteerSession } from "@/lib/server/session";
 import { isDemoMode } from "@/lib/server/env";
 import { VolunteerLoginForm } from "@/components/VolunteerLoginForm";
+import { LogoGeracaoAtomika } from "@/components/brand/Logo";
+import { StripeDivider } from "@/components/brand/StripeDivider";
 import demoLogins from "@/supabase/seed/demo/logins-de-teste.json";
 
 export default async function EntrarPage() {
@@ -11,10 +13,11 @@ export default async function EntrarPage() {
   const demoMode = isDemoMode();
 
   return (
-    <div className="flex min-h-screen flex-col gap-8 px-5 py-12">
-      <header>
-        <p className="label-mono">Geração Atômika 2026</p>
-        <h1 className="mt-1 font-display text-3xl font-semibold text-nave-text">G&apos;26 Voluntários</h1>
+    <div className="flex min-h-screen flex-col gap-8 px-5 py-10">
+      <header className="flex flex-col items-center text-center">
+        <LogoGeracaoAtomika priority className="h-auto w-56" />
+        <StripeDivider className="mt-6 w-48" />
+        <h1 className="mt-5 font-display text-3xl text-nave-text">Voluntários</h1>
         <p className="mt-2 text-nave-text-secondary">Entre para ver sua escala, refeições e o QR pessoal.</p>
       </header>
 

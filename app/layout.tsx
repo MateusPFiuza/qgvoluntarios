@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { fontVariablesClassName } from "./fonts";
 import { Starfield } from "@/components/ship-fx/Starfield";
 import { BootSequence } from "@/components/ship-fx/BootSequence";
 
@@ -18,7 +19,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={fontVariablesClassName}>
       <body className="relative min-h-screen bg-nave-bg text-nave-text">
         <Starfield />
         <BootSequence />

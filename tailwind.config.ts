@@ -30,10 +30,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        // Fontes reais Sansgeo/Andale Mono não estão disponíveis neste
-        // ambiente. Placeholder documentado: fallback monoespaçado do
-        // sistema. Ver docs/DECISOES.md e app/fonts.ts.
-        display: ["var(--font-display)", "ui-monospace", "monospace"],
+        // Sansgeo vem de app/fonts.ts (next/font/local). Ver docs/DECISOES.md.
+        display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"],
       },
       boxShadow: {

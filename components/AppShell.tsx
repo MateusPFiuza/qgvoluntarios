@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { LogoG26 } from "@/components/brand/Logo";
+import { StripeDivider } from "@/components/brand/StripeDivider";
 
 export type TabKey = "inicio" | "agenda" | "refeicoes" | "mapa" | "mais";
 
@@ -29,16 +31,29 @@ const TABS: { key: TabKey; href: string; label: string }[] = [
 ];
 
 /** Layout do voluntário no celular: uma tela por vez, barra de abas inferior. */
-export function AppShell({ title, active, children, right }: { title: string; active: TabKey; children: React.ReactNode; right?: React.ReactNode }) {
+export function AppShell({
+  title,
+  active,
+  children,
+  right,
+  brand = false,
+}: {
+  title: string;
+  active: TabKey;
+  children: React.ReactNode;
+  right?: React.ReactNode;
+  brand?: boolean;
+}) {
   return (
     <div className="flex min-h-screen flex-col px-5 pb-32 pt-6">
-      <header className="mb-6 flex items-center justify-between gap-3">
-        <div>
-          <p className="label-mono">G&apos;26 Voluntários</p>
-          <h1 className="font-display text-2xl font-semibold text-nave-text">{title}</h1>
+      <header className={`flex items-center justify-between gap-3 ${brand ? "mb-3" : "mb-6"}`}>
+        <div className="min-w-0">
+          {brand ? <LogoG26 priority className="mb-3 h-9 w-auto" /> : <p className="label-mono">G&apos;26 Voluntários</p>}
+          <h1 className="font-display text-2xl text-nave-text">{title}</h1>
         </div>
         {right}
       </header>
+      {brand && <StripeDivider className="mb-6 w-40" />}
       <div className="flex flex-col gap-5">{children}</div>
       <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-40 border-t border-nave-bezel bg-nave-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
         <ul className="mx-auto grid max-w-md grid-cols-5 md:max-w-2xl">
@@ -71,7 +86,7 @@ export function QgShell({ title, children, back = "/qg" }: { title: string; chil
       <header className="flex items-center justify-between gap-3">
         <div>
           <p className="label-mono text-nave-orange">Área do QG</p>
-          <h1 className="font-display text-2xl font-semibold text-nave-text">{title}</h1>
+          <h1 className="font-display text-2xl text-nave-text">{title}</h1>
         </div>
         <Link href={back} className="tap-target flex items-center rounded-lg px-3 text-sm text-nave-text-secondary hover:text-nave-gold">
           ← Voltar

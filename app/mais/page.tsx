@@ -3,6 +3,7 @@ import { requireVolunteerPage } from "@/lib/server/guard";
 import { getAdminAccountByVolunteerId } from "@/lib/server/repo";
 import { AppShell } from "@/components/AppShell";
 import { LogoutButton } from "@/components/LogoutButton";
+import { SimpleModeToggle } from "@/components/SimpleModeToggle";
 
 export default async function MaisPage() {
   const session = await requireVolunteerPage();
@@ -24,6 +25,9 @@ export default async function MaisPage() {
           </Link>
         ))}
       </nav>
+      <div className="border-t border-nave-bezel pt-3">
+        <SimpleModeToggle />
+      </div>
     </AppShell>
   );
 }

@@ -286,3 +286,12 @@ Fora do login, todo campo de escolher voluntário mostra a lista completa, filtr
 - A tela mostra "versão provisória v1" (`config.scheduleVersionLabel`) quando os itens não são de exemplo.
 - Abertura do evento passou a 18:30 de sexta e o fim a 17:55 de domingo (`config.eventStart`/`eventEnd`).
 - Ficaram de exemplo as refeições que não batem com a planilha: janta de sexta (17:00 a 19:00, antes do check-in) e lanche de domingo (15:30, durante a Santa Missa). Ajustar quando o cardápio real chegar.
+
+## 35. Identidade visual de volta (logos, listras, Sansgeo, estrelas)
+
+- Logos para fundo escuro em `public/brand/` (WebP, 800 px de largura): `geracao-atomika-26-escuro.webp` (Ativo 49) na tela de entrada e `g26-escuro.webp` (Ativo 56) no cabeçalho do início. Os PNG originais não vão para o repositório. Componentes em `components/brand/`; faixa de listras em `StripeDivider`.
+- Sansgeo em `public/fonts/Sansgeo.otf`, registrada com `next/font/local` em `app/fonts.ts` (variável `--font-display`). PENDENTE: confirmar com o design da Colo de Deus que a licença permite uso na web; se não permitir, basta trocar o arquivo em `app/fonts.ts`.
+- Andale Mono não é distribuída (licença da Microsoft). O texto técnico usa a mono do sistema (`--font-mono`).
+- Campo de estrelas em pixels só no início e na entrada, 36 pontos a 10 quadros por segundo, parado com a aba oculta. Desliga com `prefers-reduced-motion` e com o Modo simples.
+- Modo simples volta, discreto, no fim da tela Mais (sobrepõe a decisão 32). Fica salvo no aparelho (`localStorage`, chave `qg26:modo-simples`).
+- Fundos de planetas não foram enviados; ficam de fora.

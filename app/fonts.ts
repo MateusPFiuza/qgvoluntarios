@@ -1,15 +1,13 @@
-// Fontes da identidade visual G'26: Sansgeo (títulos) e Andale Mono
-// (horários, códigos, rótulos técnicos). Os arquivos reais das fontes NÃO
-// estão disponíveis neste ambiente de desenvolvimento.
-//
-// PLACEHOLDER: usamos apenas o fallback monoespaçado do sistema definido em
-// app/globals.css (--font-display / --font-mono). Quando os arquivos .otf /
-// .woff2 reais forem obtidos, basta:
-//   1. colocá-los em public/fonts/
-//   2. registrar com next/font/local aqui
-//   3. nenhuma outra mudança é necessária: o restante do app já referencia
-//      as variáveis --font-display e --font-mono.
-//
-// Ver docs/DECISOES.md para o registro desta decisão.
+import localFont from "next/font/local";
 
-export const fontVariablesClassName = "";
+// Sansgeo (títulos e números grandes) da identidade G'26.
+// PENDENTE: confirmar a licença de uso web com o design da Colo de Deus (docs/DECISOES.md).
+// Andale Mono não é distribuída (licença da Microsoft): o texto técnico usa a mono do sistema.
+const sansgeo = localFont({
+  src: "../public/fonts/Sansgeo.otf",
+  variable: "--font-display",
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+
+export const fontVariablesClassName = sansgeo.variable;

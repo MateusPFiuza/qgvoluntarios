@@ -63,6 +63,7 @@ export default async function HomePage() {
     <AppShell
       title="Painel de missão"
       active="inicio"
+      brand
       right={
         adminAccount ? (
           <Link href="/qg" className="tap-target flex items-center rounded-lg border border-nave-orange px-3 text-sm font-medium text-nave-orange">
