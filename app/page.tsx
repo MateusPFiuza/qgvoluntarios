@@ -17,7 +17,7 @@ import {
   listTeams,
 } from "@/lib/server/repo";
 import { currentAndNext, eventPhase, teamSlotAt } from "@/lib/rules/mission";
-import { nextMealForVolunteer } from "@/lib/rules/meals";
+import { mealCard, mealShortName, teamSlotTitle } from "@/lib/rules/home";
 import { formatCountdown, formatHM, isWithin, toDate, weekdayName } from "@/lib/rules/time";
 import { AppShell } from "@/components/AppShell";
 import { ClockControl } from "@/components/ClockControl";
@@ -52,12 +52,16 @@ export default async function HomePage() {
   const slotLocation = slot?.location_id ? locations.find((l) => l.id === slot.location_id) : null;
 
   // Com relógio simulado, registros "do futuro" da semente não contam.
-  const consumed = new Set(myCheckins.filter((c) => toDate(c.created_at) <= now).map((c) => c.meal_id));
-  const currentMeal = meals.find((m) => isWithin(now, m.starts_at, m.ends_at));
-  const currentMealDone = currentMeal ? consumed.has(currentMeal.id) : false;
-  const nextMeal = nextMealForVolunteer(meals, consumed, now);
-  const nextMealWindow = nextMeal ? windows.find((w) => w.meal_id === nextMeal.id && w.team_id === teamId) : null;
-  const showClock = isDemoMode() || Boolean(adminSession);
+  const consumed = new Map(myCheckins.filter((c) => toDate(c.created_at) <= now).map((c) => [c.meal_id, c.created_at]));
+  const card = mealCard(meals, consumed, now);
+  const cardMeal = card.state === "nenhuma" ? null : card.meal;
+  const cardWindow = cardMeal ? windows.find((w) => w.meal_id === cardMeal.id && w.team_id === teamId) : null;
+  const slotWindow = slot?.is_break
+    ? windows.find((w) => w.team_id === teamId && isWithin(toDate(w.starts_at), slot.starts_at, slot.ends_at))
+    : null;
+  const demo = isDemoMode();
+  const showClock = demo || Boolean(adminSession);
+  const scheduleBadge = schedule[0] ? (schedule[0].is_mock ? "cronograma de exemplo" : config.scheduleVersionLabel) : null;
 
   return (
     <AppShell
@@ -65,22 +69,63 @@ export default async function HomePage() {
       active="inicio"
       brand
       right={
-        adminAccount ? (
-          <Link href="/qg" className="tap-target flex items-center rounded-lg border border-nave-orange px-3 text-sm font-medium text-nave-orange">
-            Área do QG
-          </Link>
-        ) : undefined
+        <div className="flex items-center gap-2">
+          {showClock && <ClockControl current={`${weekdayName(now)} ${formatHM(now)}`} simulated={simulated} demo={demo} />}
+          {adminAccount && (
+            <Link href="/qg" className="tap-target flex items-center rounded-lg border border-nave-orange px-3 text-sm font-medium text-nave-orange">
+              Área do QG
+            </Link>
+          )}
+        </div>
       }
     >
-      {showClock && <ClockControl current={`${weekdayName(now)} ${formatHM(now)}`} simulated={simulated} />}
+      <p className="-mt-2 text-nave-text-secondary">
+        Olá, <span className="text-nave-text">{session.name.split(" ")[0]}</span> · {team?.name ?? "Sem equipe"}
+        {session.isLeader && <span className="ml-2 rounded bg-nave-gold/15 px-2 py-0.5 text-xs text-nave-gold">Líder</span>}
+      </p>
 
-      <div>
-        <p className="text-xl font-semibold text-nave-text">Olá, {session.name.split(" ")[0]}</p>
-        <p className="text-sm text-nave-text-secondary">
-          {team?.name ?? "Sem equipe"}
-          {session.isLeader && <span className="ml-2 rounded bg-nave-gold/15 px-2 py-0.5 text-xs text-nave-gold">Líder</span>}
-        </p>
-      </div>
+      {config.mealsEnabled() && (
+        <section className="painel border-2 !border-nave-gold p-5" aria-labelledby="refeicao">
+          <h2 id="refeicao" className="label-mono text-nave-gold">
+            {card.state === "agora" ? "Refeição agora" : card.state === "registrada" ? "Refeição registrada" : "Sua próxima refeição"}
+          </h2>
+          {card.state === "nenhuma" ? (
+            <p className="mt-2 text-lg">{card.title}</p>
+          ) : (
+            <>
+              <p className={`mt-2 font-display text-2xl ${card.state === "registrada" ? "text-nave-success" : "text-nave-text"}`}>
+                {card.state === "registrada" && <span aria-hidden="true">✓ </span>}
+                {card.title}
+                {card.state === "proxima" && (
+                  <>
+                    {" "}em <span className="font-mono text-nave-gold">{formatCountdown(toDate(card.meal.starts_at).getTime() - now.getTime())}</span>
+                  </>
+                )}
+              </p>
+              {card.state === "registrada" ? (
+                card.next && (
+                  <p className="mt-1 text-sm text-nave-text-secondary">
+                    Próxima: {mealShortName(card.next)} às <span className="font-mono">{formatHM(card.next.starts_at)}</span>
+                  </p>
+                )
+              ) : (
+                cardWindow && (
+                  <p className="mt-1 text-sm text-nave-text-secondary">
+                    Horário da sua equipe: <span className="font-mono">{formatHM(cardWindow.starts_at)} às {formatHM(cardWindow.ends_at)}</span>
+                    {cardWindow.is_mock && <span className="selo-exemplo ml-2">exemplo</span>}
+                  </p>
+                )
+              )}
+              <Link href="/minha-identificacao" className="tap-target mt-4 flex items-center justify-center gap-2 rounded-lg bg-nave-gold text-base font-semibold text-nave-bg">
+                <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2" />
+                </svg>
+                Mostrar meu QR
+              </Link>
+            </>
+          )}
+        </section>
+      )}
 
       <section className="painel p-5" aria-labelledby="agora">
         <h2 id="agora" className="label-mono">
@@ -89,7 +134,7 @@ export default async function HomePage() {
         {phase === "antes" && (
           <p className="mt-2 text-lg">
             Decolagem em <strong className="font-mono text-nave-gold">{formatCountdown(toDate(config.eventStart).getTime() - now.getTime())}</strong>
-            <span className="block text-sm text-nave-text-secondary">Sexta, 11 de dezembro, abertura dos portões às {formatHM(config.eventStart)}</span>
+            <span className="block text-sm text-nave-text-secondary">Sexta, 11 de dezembro, check-in a partir das {formatHM(config.eventStart)}</span>
           </p>
         )}
         {phase === "depois" && <p className="mt-2 text-lg">Missão cumprida. Obrigado por servir no Geração Atômika 2026.</p>}
@@ -97,7 +142,9 @@ export default async function HomePage() {
           <div className="mt-2 flex flex-col gap-1">
             {current ? (
               <p className="text-lg">
-                {weekdayName(now)}, {current.session_label}: {current.title}
+                {weekdayName(now)}
+                {current.session_label === "Intervalo" ? ", " : `, ${current.session_label}: `}
+                {current.title}
               </p>
             ) : (
               <p className="text-lg">{weekdayName(now)}: fora da programação</p>
@@ -107,7 +154,7 @@ export default async function HomePage() {
                 Próximo: {next.title} às <span className="font-mono">{formatHM(next.starts_at)}</span>
               </p>
             )}
-            {schedule[0]?.is_mock && <span className="selo-exemplo self-start">cronograma de exemplo</span>}
+            {scheduleBadge && <span className="selo-exemplo self-start">{scheduleBadge}</span>}
           </div>
         )}
       </section>
@@ -118,9 +165,9 @@ export default async function HomePage() {
           <p className="mt-2">Escala da sua equipe ainda não publicada.</p>
         ) : slot ? (
           <div className="mt-2">
-            <p className="text-lg">{slot.activity}</p>
+            <p className="text-lg">{teamSlotTitle(slot, slotWindow)}</p>
             <p className="text-sm text-nave-text-secondary">
-              {slotLocation?.name ?? "Local a definir"} · até <span className="font-mono">{formatHM(slot.ends_at)}</span>
+              {slotLocation?.name ?? "Local a definir"}, até <span className="font-mono">{formatHM(slot.ends_at)}</span>
             </p>
             {slot.is_mock && <span className="selo-exemplo mt-1">escala de exemplo</span>}
           </div>
@@ -129,46 +176,12 @@ export default async function HomePage() {
         )}
       </section>
 
-      {config.mealsEnabled() && (
-        <section className="painel p-5" aria-labelledby="refeicao">
-          <h2 id="refeicao" className="label-mono">Sua próxima refeição</h2>
-          {currentMeal && currentMealDone && <p className="mt-2 text-nave-success">{currentMeal.label}: refeição registrada</p>}
-          {nextMeal ? (
-            <div className="mt-2">
-              <p className="text-lg">
-                {isWithin(now, nextMeal.starts_at, nextMeal.ends_at) ? (
-                  <>
-                    {nextMeal.label} sendo servido até <span className="font-mono">{formatHM(nextMeal.ends_at)}</span>
-                  </>
-                ) : (
-                  <>
-                    {nextMeal.label} em <strong className="font-mono text-nave-gold">{formatCountdown(toDate(nextMeal.starts_at).getTime() - now.getTime())}</strong>
-                  </>
-                )}
-              </p>
-              {nextMealWindow && (
-                <p className="text-sm text-nave-text-secondary">
-                  Horário da sua equipe: <span className="font-mono">{formatHM(nextMealWindow.starts_at)}–{formatHM(nextMealWindow.ends_at)}</span>
-                  {nextMealWindow.is_mock && <span className="selo-exemplo ml-2">exemplo</span>}
-                </p>
-              )}
-              <Link href="/minha-identificacao" className="tap-target mt-4 flex items-center justify-center rounded-lg bg-nave-gold text-sm font-semibold text-nave-bg">
-                Mostrar meu QR
-              </Link>
-            </div>
-          ) : (
-            <p className="mt-2">Não há mais refeições no evento.</p>
-          )}
-        </section>
-      )}
-
       <nav className="grid grid-cols-2 gap-3" aria-label="Atalhos">
         <Shortcut href="/cronograma" label="Cronograma" />
         <Shortcut href="/buscar" label="Buscar voluntário" />
         <Shortcut href="/elogios" label="Elogios" />
         <Shortcut href="/mapa" label="Mapa" />
       </nav>
-
     </AppShell>
   );
 }

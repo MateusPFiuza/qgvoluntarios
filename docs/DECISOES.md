@@ -295,3 +295,9 @@ Fora do login, todo campo de escolher voluntário mostra a lista completa, filtr
 - Campo de estrelas em pixels só no início e na entrada, 36 pontos a 10 quadros por segundo, parado com a aba oculta. Desliga com `prefers-reduced-motion` e com o Modo simples.
 - Modo simples volta, discreto, no fim da tela Mais (sobrepõe a decisão 32). Fica salvo no aparelho (`localStorage`, chave `qg26:modo-simples`).
 - Fundos de planetas não foram enviados; ficam de fora.
+
+## 36. Início com foco na refeição
+
+- O cartão da refeição vem primeiro, com borda dourada e o botão "Mostrar meu QR" dentro (regras em `lib/rules/home.ts`). Estados: "Almoço agora, até 14:00"; "Almoço registrado às 12:16" com a próxima em menor destaque; ou a próxima refeição com contagem regressiva.
+- "Viajar no tempo" virou um ícone de relógio no cabeçalho que abre um painel. Aparece na demonstração (com selo "Demo" quando o relógio está simulado) e, em produção, só com a sessão de ADM ativa, como a API já exigia.
+- Turno de intervalo da equipe: "Intervalo. Refeição às HH:MM", usando o início da janela da equipe que cai dentro do intervalo; sem janela, só "Intervalo". O prompt cita "12:43", que é o fim da janela de exemplo; usamos o início porque é o horário em que a equipe deve ir comer.
