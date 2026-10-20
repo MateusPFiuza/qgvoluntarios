@@ -316,3 +316,11 @@ Fora do login, todo campo de escolher voluntário mostra a lista completa, filtr
 - Entrada da Área do QG: cada módulo mostra um número ao vivo (`/api/qg/summary`, atualiza a cada 15 s): refeição atual consumidas de preparadas, rádios fora e não devolvidos, estado da janela de elogios.
 - Painel de refeições: equipes da menor para a maior porcentagem; em laranja, com o texto "atenção", as abaixo de `MEAL_LOW_THRESHOLD_PCT` (padrão 50) depois da metade da janela da refeição. Mostra "Atualizado há N s" e um botão de atualizar.
 - A partir de 1024 px, as telas do QG usam até 6xl de largura e duas colunas: no painel, "por equipe" à esquerda e "ainda não comeu" à direita; nos rádios, a lista à esquerda e o formulário à direita (a aba "painel" some, porque a lista já está visível). As telas do voluntário continuam numa coluna central de até 2xl.
+
+## 39. Prioridade baixa dos ajustes de interface
+
+- Contraste: avatar com iniciais claras sobre o vermelho (5,3:1) e escuras nos demais fundos; o tom `#8A7245` saiu dos avatares. `gold-dim` fica só para bordas. Placeholders usam `text-secondary` (`#B89A63`, 7:1 no fundo do campo).
+- QR pessoal: anel com os segundos de validade (30 s) e linha com o status da refeição atual: "Almoço: liberado", "Almoço: já registrado às 12:16" ou a próxima refeição.
+- Estados dos elogios: "Enviado" e "Não enviado" (feito no item 4).
+- Logins de teste, com as senhas de ADM, só aparecem com `DEMO_MODE=true` explícito (`showDemoLogins()` em `lib/server/env.ts`). Sem Supabase o app continua em modo demonstração, mas não mostra os logins. Conferido: com `DEMO_MODE=false` o HTML de `/entrar` não contém nenhum login nem senha.
+- `npm run shots [pasta]` gera capturas das telas principais em 390x844 e 1280x800 (precisa do app rodando e do Playwright; `BASE_URL` e `CHROMIUM_PATH` opcionais).

@@ -1,16 +1,18 @@
 import { redirect } from "next/navigation";
 import { getVolunteerSession } from "@/lib/server/session";
-import { isDemoMode } from "@/lib/server/env";
+import { showDemoLogins } from "@/lib/server/env";
 import { VolunteerLoginForm } from "@/components/VolunteerLoginForm";
 import { LogoGeracaoAtomika } from "@/components/brand/Logo";
 import { StripeDivider } from "@/components/brand/StripeDivider";
 import demoLogins from "@/supabase/seed/demo/logins-de-teste.json";
 
+export const dynamic = "force-dynamic";
+
 export default async function EntrarPage() {
   const session = await getVolunteerSession();
   if (session) redirect("/");
 
-  const demoMode = isDemoMode();
+  const demoMode = showDemoLogins();
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-8 px-5 py-10">
