@@ -109,10 +109,10 @@ export function PraiseArea({
               {people.map((p) => {
                 const mine = sent[p.id] ?? [];
                 return (
-                  <li key={p.id} className="rounded-xl border border-nave-bezel p-3">
+                  <li key={p.id} className="rounded-xl border border-nave-bezel px-4 py-4">
                     <p className="text-base font-semibold text-nave-text">{p.fullName}</p>
-                    <p className="mb-2 text-sm text-nave-text-secondary">{p.teamName ?? "Sem equipe"}</p>
-                    <div className="grid grid-cols-3 gap-2">
+                    <p className="mb-3 text-sm text-nave-text-secondary">{p.teamName ?? "Sem equipe"}</p>
+                    <div className="grid grid-cols-3 gap-3">
                       {TRAITS.map((t) => {
                         const on = mine.includes(t);
                         return (
@@ -122,13 +122,12 @@ export function PraiseArea({
                             aria-pressed={on}
                             aria-label={`${TRAIT_INFO[t].label} para ${p.fullName}: ${on ? "enviado" : "não enviado"}`}
                             onClick={() => toggle(p.id, t)}
-                            className={`flex min-h-[64px] flex-col items-center justify-center gap-0.5 rounded-lg border-2 px-1 text-xs transition-colors active:scale-95 ${
-                              on ? "border-nave-gold bg-nave-gold text-nave-bg" : "border-nave-text-secondary text-nave-text"
+                            className={`flex min-h-[80px] flex-col items-center justify-center gap-2 rounded-lg border-2 px-2 py-3 text-xs transition-colors active:scale-95 ${
+                              on ? "border-nave-gold bg-nave-gold text-nave-bg shadow-[0_0_0_2px_rgba(232,184,90,0.35)]" : "border-nave-gold-dim text-nave-text"
                             }`}
                           >
                             <TraitIcon trait={t} size={24} />
                             <span className="text-sm font-semibold leading-tight">{TRAIT_INFO[t].label}</span>
-                            <span className="leading-tight">{on ? "✓ Enviado" : "Não enviado"}</span>
                           </button>
                         );
                       })}
